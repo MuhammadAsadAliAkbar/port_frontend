@@ -41,6 +41,16 @@ const quickQuestions = [
 ];
 
 /* =========================================================
+   NORMALIZE MESSAGE
+========================================================= */
+
+const normalizeMessage = (value = "") =>
+  String(value)
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+
+/* =========================================================
    FALLBACK RESPONSE
 ========================================================= */
 
@@ -221,16 +231,17 @@ function Chatbot() {
     useRef(null);
 
   /*
-    IMPORTANT:
-    Prevent duplicate Pusher events.
+    Store processed Pusher events.
+    This prevents duplicate events.
   */
   const processedEventsRef =
     useRef(new Set());
 
   /*
-    IMPORTANT:
-    Keep track of messages that were
-    already sent by this browser.
+    Store locally sent user messages.
+
+    Backend /chat may send the same message
+    back through Pusher client-message.
   */
   const pendingUserMessagesRef =
     useRef([]);
@@ -430,7 +441,6 @@ function Chatbot() {
     () => {
 
       if (isOpenRef.current) {
-
         return;
       }
 
@@ -508,6 +518,97 @@ function Chatbot() {
     };
 
   }, []);
+
+  /* =======================================================
+     PORTFOLIO UPDATE API
+     
+     IMPORTANT:
+     This API is ONLY called when a portfolio-update
+     is received from Pusher.
+  ======================================================= */
+
+  const callPortfolioUpdateAPI =
+    async (portfolioData) => {
+
+      try {
+
+        if (!API_URL) {
+
+          console.warn(
+            "⚠️ VITE_API_URL is missing."
+          );
+
+          return;
+        }
+
+        console.log(
+          "📡 Calling portfolio update API:",
+          portfolioData
+        );
+
+        const response =
+          await fetch(
+            `${API_URL}/portfolio/update`,
+            {
+              method:
+                "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+
+              body:
+                JSON.stringify({
+                  id:
+                    portfolioData?.id,
+
+                  type:
+                    portfolioData?.type ||
+                    "portfolio",
+
+                  title:
+                    portfolioData?.title ||
+                    "Portfolio Update",
+
+                  message:
+                    portfolioData?.message ||
+                    "A new portfolio update is available.",
+
+                  createdAt:
+                    portfolioData?.createdAt ||
+                    new Date().toISOString(),
+                }),
+            }
+          );
+
+        if (!response.ok) {
+
+          throw new Error(
+            `Portfolio update API failed: ${response.status}`
+          );
+        }
+
+        const data =
+          await response.json();
+
+        console.log(
+          "✅ Portfolio update API response:",
+          data
+        );
+
+        return data;
+
+      } catch (error) {
+
+        console.error(
+          "❌ Portfolio update API error:",
+          error
+        );
+
+        return null;
+      }
+    };
 
   /* =======================================================
      PUSHER CONNECTION
@@ -627,11 +728,21 @@ function Chatbot() {
 
     /* =====================================================
        PORTFOLIO UPDATE
+       
+       FLOW:
+
+       Pusher
+          ↓
+       portfolio-update
+          ↓
+       /api/portfolio/update
+          ↓
+       Chatbot message
     ===================================================== */
 
     channel.bind(
       "portfolio-update",
-      (data) => {
+      async (data) => {
 
         console.log(
           "🔔 Portfolio update received:",
@@ -642,13 +753,27 @@ function Chatbot() {
           return;
         }
 
-        /*
-          Unique event ID.
-        */
+        /* ================================================
+           CREATE STABLE EVENT ID
+        ================================================ */
+
+        const title =
+          data.title ||
+          "Portfolio Update";
+
+        const updateMessage =
+          data.message ||
+          "A new portfolio update is available.";
 
         const eventId =
           data.id ||
-          `${data.type || "portfolio"}-${data.title || ""}-${data.message || ""}-${data.createdAt || ""}`;
+          data.messageId ||
+          data.eventId ||
+          `portfolio-${data.type || "portfolio"}-${title}-${updateMessage}-${data.createdAt || ""}`;
+
+        /* ================================================
+           DUPLICATE EVENT CHECK
+        ================================================ */
 
         if (
           processedEventsRef.current.has(
@@ -664,17 +789,31 @@ function Chatbot() {
           return;
         }
 
+        /*
+          Mark immediately.
+
+          This is important because API call is async.
+          Agar same event dobara Pusher se aa jaye,
+          second API call nahi hogi.
+        */
+
         processedEventsRef.current.add(
           eventId
         );
 
-        const title =
-          data.title ||
-          "Portfolio Update";
+        /* ================================================
+           CALL PORTFOLIO UPDATE API
+           
+           ONLY portfolio-update event par.
+        ================================================ */
 
-        const updateMessage =
-          data.message ||
-          "A new portfolio update is available.";
+        await callPortfolioUpdateAPI(
+          data
+        );
+
+        /* ================================================
+           CREATE CHAT MESSAGE
+        ================================================ */
 
         const portfolioMessage = {
 
@@ -701,13 +840,12 @@ function Chatbot() {
             new Date().toISOString(),
         };
 
+        /* ================================================
+           ADD MESSAGE ONLY ONCE
+        ================================================ */
+
         setMessages(
           (prev) => {
-
-            /*
-              Extra protection:
-              check existing message ID.
-            */
 
             if (
               prev.some(
@@ -716,6 +854,7 @@ function Chatbot() {
                   portfolioMessage.id
               )
             ) {
+
               return prev;
             }
 
@@ -726,6 +865,10 @@ function Chatbot() {
           }
         );
 
+        /* ================================================
+           NOTIFICATION
+        ================================================ */
+
         showNotification();
       }
     );
@@ -733,9 +876,9 @@ function Chatbot() {
     /* =====================================================
        CLIENT MESSAGE
        
-       IMPORTANT:
-       Backend Pusher may echo our own user message.
-       We detect that and DO NOT add it twice.
+       Backend /chat apna user message Pusher par echo
+       karta hai. Is liye local message ko dobara show
+       nahi karenge.
     ===================================================== */
 
     channel.bind(
@@ -754,16 +897,22 @@ function Chatbot() {
         const incomingMessage =
           data.message.trim();
 
-        /*
-          If this message was sent locally,
-          don't add it again.
-        */
+        const normalizedIncoming =
+          normalizeMessage(
+            incomingMessage
+          );
+
+        /* ================================================
+           OWN LOCAL MESSAGE
+        ================================================ */
 
         const pendingIndex =
           pendingUserMessagesRef.current.findIndex(
             (item) =>
-              item.text ===
-              incomingMessage
+              normalizeMessage(
+                item.text
+              ) ===
+              normalizedIncoming
           );
 
         if (
@@ -772,7 +921,7 @@ function Chatbot() {
         ) {
 
           console.log(
-            "♻️ Own Pusher client message ignored:",
+            "♻️ Own client-message ignored:",
             incomingMessage
           );
 
@@ -784,9 +933,15 @@ function Chatbot() {
           return;
         }
 
+        /* ================================================
+           EVENT ID
+        ================================================ */
+
         const eventId =
           data.id ||
-          `client-${data.createdAt || ""}-${incomingMessage}`;
+          data.messageId ||
+          data.eventId ||
+          `client-${data.createdAt || ""}-${normalizedIncoming}`;
 
         if (
           processedEventsRef.current.has(
@@ -804,6 +959,10 @@ function Chatbot() {
         processedEventsRef.current.add(
           eventId
         );
+
+        /* ================================================
+           ADD MESSAGE
+        ================================================ */
 
         setMessages(
           (prev) => {
@@ -867,9 +1026,16 @@ function Chatbot() {
         const messageText =
           data.message.trim();
 
+        const normalizedMessage =
+          normalizeMessage(
+            messageText
+          );
+
         const eventId =
           data.id ||
-          `chatbot-${data.createdAt || ""}-${messageText}`;
+          data.messageId ||
+          data.eventId ||
+          `chatbot-${data.createdAt || ""}-${normalizedMessage}`;
 
         if (
           processedEventsRef.current.has(
@@ -933,7 +1099,7 @@ function Chatbot() {
     /* =====================================================
        AI RESPONSE
        
-       Prevent duplicate AI responses.
+       Prevent duplicate AI messages.
     ===================================================== */
 
     channel.bind(
@@ -952,9 +1118,20 @@ function Chatbot() {
         const reply =
           data.reply.trim();
 
+        const normalizedReply =
+          normalizeMessage(
+            reply
+          );
+
         const eventId =
           data.id ||
-          `ai-${data.createdAt || ""}-${reply}`;
+          data.messageId ||
+          data.eventId ||
+          `ai-${data.createdAt || ""}-${normalizedReply}`;
+
+        /* ================================================
+           EVENT ID DUPLICATE
+        ================================================ */
 
         if (
           processedEventsRef.current.has(
@@ -966,13 +1143,14 @@ function Chatbot() {
             "♻️ Duplicate AI response ignored"
           );
 
+          setIsTyping(false);
+
           return;
         }
 
-        /*
-          Check whether exactly same response
-          already exists.
-        */
+        /* ================================================
+           MESSAGE DUPLICATE
+        ================================================ */
 
         setMessages(
           (prev) => {
@@ -980,9 +1158,12 @@ function Chatbot() {
             const alreadyExists =
               prev.some(
                 (item) =>
-                  item.sender === "bot" &&
-                  item.text === reply &&
-                  item.type === "ai-response"
+                  item.sender ===
+                    "bot" &&
+                  normalizeMessage(
+                    item.text
+                  ) ===
+                    normalizedReply
               );
 
             if (alreadyExists) {
@@ -1104,6 +1285,8 @@ function Chatbot() {
 
   /* =======================================================
      SEND NORMAL CHAT MESSAGE
+     
+     ONLY /chat API
   ======================================================= */
 
   const sendMessage =
@@ -1122,15 +1305,13 @@ function Chatbot() {
       }
 
       const localMessageId =
-        `user-${Date.now()}-${Math.random()}`;
+        `user-${Date.now()}-${Math.random()
+          .toString(36)
+          .slice(2)}`;
 
-      /*
-        Store message temporarily.
-
-        Agar backend isi message ko
-        Pusher se echo karega to hum
-        usko ignore karenge.
-      */
+      /* ================================================
+         SAVE LOCAL MESSAGE
+      ================================================ */
 
       pendingUserMessagesRef.current.push({
         id:
@@ -1143,10 +1324,9 @@ function Chatbot() {
           Date.now(),
       });
 
-      /*
-        Remove stale pending messages
-        after 10 seconds.
-      */
+      /* ================================================
+         REMOVE STALE PENDING MESSAGE
+      ================================================ */
 
       setTimeout(() => {
 
@@ -1160,7 +1340,7 @@ function Chatbot() {
       }, 10000);
 
       /* ================================================
-         SHOW USER MESSAGE IMMEDIATELY
+         SHOW USER MESSAGE
       ================================================ */
 
       setMessages(
@@ -1200,6 +1380,13 @@ function Chatbot() {
           );
         }
 
+        /* ==============================================
+           NORMAL CHAT API
+           
+           IMPORTANT:
+           Portfolio update API yahan call nahi hogi.
+        ============================================== */
+
         const response =
           await fetch(
             `${API_URL}/chat`,
@@ -1230,10 +1417,7 @@ function Chatbot() {
           await response.json();
 
         /* ==============================================
-           DIRECT API RESPONSE
-           
-           Only use direct response when
-           Pusher is NOT connected.
+           DIRECT RESPONSE ONLY IF PUSHER DISCONNECTED
         ============================================== */
 
         if (
@@ -1248,14 +1432,23 @@ function Chatbot() {
           const reply =
             data.reply.trim();
 
+          const normalizedReply =
+            normalizeMessage(
+              reply
+            );
+
           setMessages(
             (prev) => {
 
               const alreadyExists =
                 prev.some(
                   (item) =>
-                    item.sender === "bot" &&
-                    item.text === reply
+                    item.sender ===
+                      "bot" &&
+                    normalizeMessage(
+                      item.text
+                    ) ===
+                      normalizedReply
                 );
 
               if (alreadyExists) {
@@ -1266,7 +1459,9 @@ function Chatbot() {
                 ...prev,
                 {
                   id:
-                    `bot-${Date.now()}-${Math.random()}`,
+                    `bot-${Date.now()}-${Math.random()
+                      .toString(36)
+                      .slice(2)}`,
 
                   sender:
                     "bot",
@@ -1292,10 +1487,9 @@ function Chatbot() {
           error
         );
 
-        /*
-          Remove pending message
-          because request failed.
-        */
+        /* ==============================================
+           REMOVE PENDING MESSAGE
+        ============================================== */
 
         pendingUserMessagesRef.current =
           pendingUserMessagesRef.current.filter(
@@ -1304,55 +1498,63 @@ function Chatbot() {
               localMessageId
           );
 
-        setTimeout(
-          () => {
+        /* ==============================================
+           FALLBACK
+        ============================================== */
 
-            setIsTyping(
-              false
-            );
+        setTimeout(() => {
 
-            setMessages(
-              (prev) => {
+          setIsTyping(
+            false
+          );
 
-                const fallbackText =
-                  getBotReply(
-                    message
-                  );
+          setMessages(
+            (prev) => {
 
-                const alreadyExists =
-                  prev.some(
-                    (item) =>
-                      item.sender === "bot" &&
-                      item.text ===
+              const fallbackText =
+                getBotReply(
+                  message
+                );
+
+              const alreadyExists =
+                prev.some(
+                  (item) =>
+                    item.sender ===
+                      "bot" &&
+                    normalizeMessage(
+                      item.text
+                    ) ===
+                      normalizeMessage(
                         fallbackText
-                  );
+                      )
+                );
 
-                if (alreadyExists) {
-                  return prev;
-                }
-
-                return [
-                  ...prev,
-                  {
-                    id:
-                      `fallback-${Date.now()}-${Math.random()}`,
-
-                    sender:
-                      "bot",
-
-                    text:
-                      fallbackText,
-
-                    type:
-                      "fallback",
-                  },
-                ];
+              if (alreadyExists) {
+                return prev;
               }
-            );
 
-          },
-          700
-        );
+              return [
+                ...prev,
+                {
+                  id:
+                    `fallback-${Date.now()}-${Math.random()
+                      .toString(36)
+                      .slice(2)}`,
+
+                  sender:
+                    "bot",
+
+                  text:
+                    fallbackText,
+
+                  type:
+                    "fallback",
+                },
+              ];
+            }
+          );
+
+        }, 700);
       }
     };
 
@@ -1438,10 +1640,6 @@ function Chatbot() {
       >
 
         <i className="fas fa-robot"></i>
-
-        {/* =================================================
-            NOTIFICATION BADGE
-        ================================================= */}
 
         <AnimatePresence>
 
@@ -1594,10 +1792,6 @@ function Chatbot() {
 
               </div>
 
-              {/* =================================================
-                  CLOSE BUTTON
-              ================================================= */}
-
               <button
                 type="button"
                 className="chatbot-close"
@@ -1691,10 +1885,6 @@ function Chatbot() {
                           0.25,
                       }}
                     >
-
-                      {/* =====================================
-                          BOT AVATAR
-                      ===================================== */}
 
                       {message.sender ===
                         "bot" && (
