@@ -1,4 +1,3 @@
-
 import {
   useEffect,
   useRef,
@@ -203,15 +202,6 @@ function Chatbot() {
   ] = useState(0);
 
   /* =======================================================
-     PORTFOLIO UPDATE SENDING
-  ======================================================= */
-
-  const [
-    isSendingUpdate,
-    setIsSendingUpdate,
-  ] = useState(false);
-
-  /* =======================================================
      REFS
   ======================================================= */
 
@@ -226,8 +216,7 @@ function Chatbot() {
 
   /*
     IMPORTANT:
-    This ref always contains the latest open/close state.
-    Pusher callbacks can otherwise use an old state value.
+    Always contains latest chatbot open/close state.
   */
   const isOpenRef =
     useRef(false);
@@ -240,9 +229,11 @@ function Chatbot() {
   ======================================================= */
 
   useEffect(() => {
+
     let audio;
 
     try {
+
       audio =
         new Audio(
           notificationSound
@@ -259,6 +250,7 @@ function Chatbot() {
 
       const unlockAudio =
         async () => {
+
           const notificationAudio =
             notificationAudioRef.current;
 
@@ -267,6 +259,7 @@ function Chatbot() {
           }
 
           try {
+
             notificationAudio.muted =
               true;
 
@@ -302,7 +295,9 @@ function Chatbot() {
               "touchstart",
               unlockAudio
             );
+
           } catch (error) {
+
             console.warn(
               "⚠️ Audio unlock waiting:",
               error
@@ -335,6 +330,7 @@ function Chatbot() {
       );
 
       return () => {
+
         window.removeEventListener(
           "click",
           unlockAudio
@@ -356,7 +352,9 @@ function Chatbot() {
         );
 
         if (audio) {
+
           audio.pause();
+
           audio.currentTime =
             0;
         }
@@ -364,12 +362,15 @@ function Chatbot() {
         notificationAudioRef.current =
           null;
       };
+
     } catch (error) {
+
       console.error(
         "❌ Audio initialization error:",
         error
       );
     }
+
   }, []);
 
   /* =======================================================
@@ -378,7 +379,9 @@ function Chatbot() {
 
   const playNotificationSound =
     async () => {
+
       try {
+
         const audio =
           notificationAudioRef.current;
 
@@ -398,7 +401,9 @@ function Chatbot() {
           false;
 
         await audio.play();
+
       } catch (error) {
+
         console.warn(
           "⚠️ Notification sound error:",
           error
@@ -414,12 +419,12 @@ function Chatbot() {
     () => {
 
       /*
-        If chatbot is currently open,
-        message is already visible.
-
-        Therefore don't increase unread badge.
+        Chatbot open hai to message already visible hai.
+        Is liye unread badge nahi barhega.
       */
+
       if (isOpenRef.current) {
+
         console.log(
           "ℹ️ Chatbot open - notification ignored"
         );
@@ -451,17 +456,16 @@ function Chatbot() {
 
   useEffect(() => {
 
-    /*
-      Keep ref synchronized with React state.
-    */
     isOpenRef.current =
       isOpen;
 
     /*
-      Whenever chatbot becomes open,
-      unread notifications are considered read.
+      Chatbot open hone par
+      notifications read ho jati hain.
     */
+
     if (isOpen) {
+
       setNotificationCount(0);
     }
 
@@ -476,10 +480,6 @@ function Chatbot() {
     const handleOpenChatbot =
       () => {
 
-        /*
-          Update ref immediately.
-          Don't wait for React render.
-        */
         isOpenRef.current =
           true;
 
@@ -491,9 +491,6 @@ function Chatbot() {
     const handleCloseChatbot =
       () => {
 
-        /*
-          Update ref immediately.
-        */
         isOpenRef.current =
           false;
 
@@ -643,6 +640,10 @@ function Chatbot() {
 
     /* =====================================================
        PORTFOLIO UPDATE
+       
+       IMPORTANT:
+       Chatbot ONLY RECEIVES portfolio updates.
+       It does NOT SEND portfolio updates.
     ===================================================== */
 
     channel.bind(
@@ -667,6 +668,7 @@ function Chatbot() {
           "A new portfolio update is available.";
 
         const portfolioMessage = {
+
           id:
             data.id ||
             `portfolio-${Date.now()}-${Math.random()}`,
@@ -692,7 +694,7 @@ function Chatbot() {
         };
 
         /* ===============================================
-           ADD MESSAGE
+           ADD PORTFOLIO UPDATE TO CHAT
         =============================================== */
 
         setMessages(
@@ -727,9 +729,6 @@ function Chatbot() {
           return;
         }
 
-        /*
-          Add client message to chat.
-        */
         setMessages(
           (prev) => [
             ...prev,
@@ -786,8 +785,7 @@ function Chatbot() {
                 `chatbot-${Date.now()}-${Math.random()}`,
 
               sender:
-                data.sender ===
-                "user"
+                data.sender === "user"
                   ? "user"
                   : "bot",
 
@@ -925,160 +923,11 @@ function Chatbot() {
   ]);
 
   /* =======================================================
-     PORTFOLIO UPDATE API
-  ======================================================= */
-
-  const sendPortfolioUpdate =
-    async ({
-      title = "Portfolio Update",
-      message,
-      type = "portfolio",
-    }) => {
-
-      try {
-
-        /* ================================================
-           VALIDATION
-        ================================================ */
-
-        if (!message?.trim()) {
-
-          console.warn(
-            "Portfolio update message is required."
-          );
-
-          return null;
-        }
-
-        if (!API_URL) {
-
-          console.error(
-            "❌ VITE_API_URL is missing."
-          );
-
-          return null;
-        }
-
-        console.log(
-          "📤 Sending portfolio update..."
-        );
-
-        setIsSendingUpdate(
-          true
-        );
-
-        /* ================================================
-           API REQUEST
-        ================================================ */
-
-        const response =
-          await fetch(
-            `${API_URL}/portfolio/update`,
-            {
-              method:
-                "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json",
-              },
-
-              body:
-                JSON.stringify({
-                  title:
-                    title?.trim() ||
-                    "Portfolio Update",
-
-                  message:
-                    message.trim(),
-
-                  type,
-                }),
-            }
-          );
-
-        /* ================================================
-           RESPONSE
-        ================================================ */
-
-        const data =
-          await response.json();
-
-        /* ================================================
-           ERROR
-        ================================================ */
-
-        if (
-          !response.ok ||
-          !data?.success
-        ) {
-
-          throw new Error(
-            data?.message ||
-            `Portfolio update failed: ${response.status}`
-          );
-        }
-
-        /* ================================================
-           SUCCESS
-        ================================================ */
-
-        console.log(
-          "🔔 Portfolio update sent successfully:",
-          data
-        );
-
-        return data;
-
-      } catch (error) {
-
-        console.error(
-          "❌ Portfolio update API error:",
-          error
-        );
-
-        return null;
-
-      } finally {
-
-        setIsSendingUpdate(
-          false
-        );
-      }
-    };
-
-  /* =======================================================
-     TEST PORTFOLIO UPDATE
-
-     IMPORTANT:
-     Remove this function/button in production.
-  ======================================================= */
-
-  const handleTestPortfolioUpdate =
-    async () => {
-
-      const result =
-        await sendPortfolioUpdate({
-          title:
-            "New Project Added 🚀",
-
-          message:
-            "A new RPA Management System has been added to Muhammad Asad Ali Akbar's portfolio.",
-
-          type:
-            "project",
-        });
-
-      if (result?.success) {
-
-        console.log(
-          "✅ Test portfolio update broadcast successfully."
-        );
-      }
-    };
-
-  /* =======================================================
      CHATBOT BROADCAST API
+     
+     This is separate from portfolio update.
+     It can still receive/send chatbot broadcast messages
+     if your backend uses this endpoint.
   ======================================================= */
 
   const broadcastChatbotMessage =
@@ -1247,6 +1096,9 @@ function Chatbot() {
 
         /* ==============================================
            DIRECT API RESPONSE
+           
+           If Pusher is unavailable, use API response
+           directly.
         ============================================== */
 
         if (
@@ -1344,12 +1196,6 @@ function Chatbot() {
   const openChatbot =
     () => {
 
-      /*
-        IMPORTANT:
-        Update ref immediately.
-        This prevents Pusher callbacks
-        from seeing stale state.
-      */
       isOpenRef.current =
         true;
 
@@ -1369,10 +1215,6 @@ function Chatbot() {
   const closeChatbot =
     () => {
 
-      /*
-        IMPORTANT:
-        Update ref immediately.
-      */
       isOpenRef.current =
         false;
 
@@ -1417,6 +1259,7 @@ function Chatbot() {
         ================================================= */}
 
         <AnimatePresence>
+
           {notificationCount >
             0 && (
 
@@ -1457,6 +1300,7 @@ function Chatbot() {
 
             </motion.span>
           )}
+
         </AnimatePresence>
 
       </motion.button>
@@ -1466,6 +1310,7 @@ function Chatbot() {
       =================================================== */}
 
       <AnimatePresence>
+
         {isOpen && (
 
           <motion.div
@@ -1574,7 +1419,9 @@ function Chatbot() {
                 }
                 aria-label="Close chat"
               >
+
                 <i className="fas fa-xmark"></i>
+
               </button>
 
             </div>
@@ -1664,7 +1511,9 @@ function Chatbot() {
                         "bot" && (
 
                         <div className="message-avatar">
+
                           <i className="fas fa-robot"></i>
+
                         </div>
                       )}
 
@@ -1719,13 +1568,17 @@ function Chatbot() {
                   >
 
                     <div className="message-avatar">
+
                       <i className="fas fa-robot"></i>
+
                     </div>
 
                     <div className="typing-bubble">
+
                       <span></span>
                       <span></span>
                       <span></span>
+
                     </div>
 
                   </motion.div>
@@ -1792,75 +1645,6 @@ function Chatbot() {
                 </div>
               )}
 
-              {/* =================================================
-                  TEST PORTFOLIO UPDATE
-
-                  IMPORTANT:
-                  REMOVE THIS BLOCK IN PRODUCTION.
-              ================================================= */}
-
-              <div
-                style={{
-                  marginTop:
-                    "16px",
-
-                  padding:
-                    "10px",
-
-                  border:
-                    "1px dashed rgba(34, 197, 94, 0.35)",
-
-                  borderRadius:
-                    "12px",
-                }}
-              >
-
-                {/* Test button intentionally hidden */}
-
-                {/* 
-                <button
-                  type="button"
-                  onClick={
-                    handleTestPortfolioUpdate
-                  }
-                  disabled={
-                    isSendingUpdate
-                  }
-                  style={{
-                    width:
-                      "100%",
-
-                    border:
-                      "none",
-
-                    borderRadius:
-                      "10px",
-
-                    padding:
-                      "10px 14px",
-
-                    cursor:
-                      isSendingUpdate
-                        ? "not-allowed"
-                        : "pointer",
-
-                    opacity:
-                      isSendingUpdate
-                        ? 0.6
-                        : 1,
-
-                    fontWeight:
-                      600,
-                  }}
-                >
-                  {isSendingUpdate
-                    ? "Sending Update..."
-                    : "🚀 Test Portfolio Update"}
-                </button>
-                */}
-
-              </div>
-
             </div>
 
             {/* =================================================
@@ -1875,7 +1659,9 @@ function Chatbot() {
             >
 
               <span className="whatsapp-icon">
+
                 <i className="fab fa-whatsapp"></i>
+
               </span>
 
               <span className="whatsapp-text">
@@ -1958,17 +1744,21 @@ function Chatbot() {
               <div className="chatbot-powered">
 
                 <span>
+
                   <i className="fas fa-shield-halved"></i>
 
                   Secure Portfolio Assistant
+
                 </span>
 
                 <span className="powered-dot"></span>
 
                 <span>
+
                   {isPusherConnected
                     ? "Live Updates"
                     : "Connecting"}
+
                 </span>
 
               </div>
@@ -1984,4 +1774,3 @@ function Chatbot() {
 }
 
 export default Chatbot;
-
