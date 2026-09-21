@@ -71,7 +71,7 @@ function Contact() {
 
       const response =
         await fetch(
-          `${API_URL}/api/contact`,
+          `${API_URL}/contact`,
           {
             method:
               "POST",
