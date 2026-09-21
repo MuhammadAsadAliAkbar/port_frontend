@@ -973,7 +973,7 @@ function Chatbot() {
 
         const response =
           await fetch(
-            `${API_URL}/api/portfolio/update`,
+            `${API_URL}/portfolio/update`,
             {
               method:
                 "POST",
@@ -1109,7 +1109,7 @@ function Chatbot() {
 
         const response =
           await fetch(
-            `${API_URL}/api/chatbot/broadcast`,
+            `${API_URL}/chatbot/broadcast`,
             {
               method:
                 "POST",
@@ -1218,7 +1218,7 @@ function Chatbot() {
 
         const response =
           await fetch(
-            `${API_URL}/api/chat`,
+            `${API_URL}/chat`,
             {
               method:
                 "POST",
