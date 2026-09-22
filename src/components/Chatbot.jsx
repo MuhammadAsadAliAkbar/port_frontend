@@ -159,6 +159,15 @@ function Chatbot() {
   ] = useState(false);
 
   /* =======================================================
+     ACTIVE TAB
+  ======================================================= */
+
+  const [
+    activeTab,
+    setActiveTab,
+  ] = useState("home");
+
+  /* =======================================================
      MESSAGES
   ======================================================= */
 
@@ -212,6 +221,37 @@ function Chatbot() {
   ] = useState(0);
 
   /* =======================================================
+     TASKS
+  ======================================================= */
+
+  const [
+    tasks,
+    setTasks,
+  ] = useState([
+    {
+      id: "task-1",
+      title: "Explore Portfolio",
+      description:
+        "Explore Asad's projects and professional experience.",
+      completed: false,
+    },
+    {
+      id: "task-2",
+      title: "Check Skills",
+      description:
+        "View the technologies and development skills.",
+      completed: false,
+    },
+    {
+      id: "task-3",
+      title: "Contact Asad",
+      description:
+        "Send a message or connect through WhatsApp.",
+      completed: false,
+    },
+  ]);
+
+  /* =======================================================
      REFS
   ======================================================= */
 
@@ -230,19 +270,9 @@ function Chatbot() {
   const notificationAudioRef =
     useRef(null);
 
-  /*
-    Store processed Pusher events.
-    This prevents duplicate events.
-  */
   const processedEventsRef =
     useRef(new Set());
 
-  /*
-    Store locally sent user messages.
-
-    Backend /chat may send the same message
-    back through Pusher client-message.
-  */
   const pendingUserMessagesRef =
     useRef([]);
 
@@ -396,7 +426,7 @@ function Chatbot() {
   }, []);
 
   /* =======================================================
-     PLAY NOTIFICATION SOUND
+     PLAY NOTIFICATION
   ======================================================= */
 
   const playNotificationSound =
@@ -453,7 +483,7 @@ function Chatbot() {
     };
 
   /* =======================================================
-     OPEN STATE SYNC
+     OPEN STATE
   ======================================================= */
 
   useEffect(() => {
@@ -522,9 +552,8 @@ function Chatbot() {
   /* =======================================================
      PORTFOLIO UPDATE API
      
-     IMPORTANT:
-     This API is ONLY called when a portfolio-update
-     is received from Pusher.
+     ONLY CALLED WHEN PUSHER RECEIVES
+     portfolio-update
   ======================================================= */
 
   const callPortfolioUpdateAPI =
@@ -538,11 +567,11 @@ function Chatbot() {
             "⚠️ VITE_API_URL is missing."
           );
 
-          return;
+          return null;
         }
 
         console.log(
-          "📡 Calling portfolio update API:",
+          "📡 Calling /portfolio/update:",
           portfolioData
         );
 
@@ -593,7 +622,7 @@ function Chatbot() {
           await response.json();
 
         console.log(
-          "✅ Portfolio update API response:",
+          "✅ Portfolio API response:",
           data
         );
 
@@ -701,7 +730,7 @@ function Chatbot() {
     );
 
     /* =====================================================
-       PORTFOLIO CHANNEL
+       CHANNEL
     ===================================================== */
 
     const channel =
@@ -713,7 +742,7 @@ function Chatbot() {
       channel;
 
     /* =====================================================
-       SUBSCRIPTION SUCCESS
+       SUBSCRIPTION
     ===================================================== */
 
     channel.bind(
@@ -728,16 +757,6 @@ function Chatbot() {
 
     /* =====================================================
        PORTFOLIO UPDATE
-       
-       FLOW:
-
-       Pusher
-          ↓
-       portfolio-update
-          ↓
-       /api/portfolio/update
-          ↓
-       Chatbot message
     ===================================================== */
 
     channel.bind(
@@ -752,10 +771,6 @@ function Chatbot() {
         if (!data) {
           return;
         }
-
-        /* ================================================
-           CREATE STABLE EVENT ID
-        ================================================ */
 
         const title =
           data.title ||
@@ -772,7 +787,7 @@ function Chatbot() {
           `portfolio-${data.type || "portfolio"}-${title}-${updateMessage}-${data.createdAt || ""}`;
 
         /* ================================================
-           DUPLICATE EVENT CHECK
+           DUPLICATE EVENT
         ================================================ */
 
         if (
@@ -790,11 +805,9 @@ function Chatbot() {
         }
 
         /*
-          Mark immediately.
-
-          This is important because API call is async.
-          Agar same event dobara Pusher se aa jaye,
-          second API call nahi hogi.
+          Mark BEFORE API call.
+          This prevents the same event from
+          calling API twice.
         */
 
         processedEventsRef.current.add(
@@ -802,9 +815,7 @@ function Chatbot() {
         );
 
         /* ================================================
-           CALL PORTFOLIO UPDATE API
-           
-           ONLY portfolio-update event par.
+           CALL API
         ================================================ */
 
         await callPortfolioUpdateAPI(
@@ -812,7 +823,7 @@ function Chatbot() {
         );
 
         /* ================================================
-           CREATE CHAT MESSAGE
+           ADD PORTFOLIO MESSAGE
         ================================================ */
 
         const portfolioMessage = {
@@ -840,10 +851,6 @@ function Chatbot() {
             new Date().toISOString(),
         };
 
-        /* ================================================
-           ADD MESSAGE ONLY ONCE
-        ================================================ */
-
         setMessages(
           (prev) => {
 
@@ -854,13 +861,49 @@ function Chatbot() {
                   portfolioMessage.id
               )
             ) {
-
               return prev;
             }
 
             return [
               ...prev,
               portfolioMessage,
+            ];
+          }
+        );
+
+        /* ================================================
+           ADD TASK
+        ================================================ */
+
+        setTasks(
+          (prev) => {
+
+            const exists =
+              prev.some(
+                (task) =>
+                  task.id ===
+                  `portfolio-${eventId}`
+              );
+
+            if (exists) {
+              return prev;
+            }
+
+            return [
+              ...prev,
+              {
+                id:
+                  `portfolio-${eventId}`,
+
+                title:
+                  title,
+
+                description:
+                  updateMessage,
+
+                completed:
+                  false,
+              },
             ];
           }
         );
@@ -875,10 +918,6 @@ function Chatbot() {
 
     /* =====================================================
        CLIENT MESSAGE
-       
-       Backend /chat apna user message Pusher par echo
-       karta hai. Is liye local message ko dobara show
-       nahi karenge.
     ===================================================== */
 
     channel.bind(
@@ -903,8 +942,8 @@ function Chatbot() {
           );
 
         /* ================================================
-           OWN LOCAL MESSAGE
-        ================================================ */
+           IGNORE OWN MESSAGE
+        ================================================= */
 
         const pendingIndex =
           pendingUserMessagesRef.current.findIndex(
@@ -933,10 +972,6 @@ function Chatbot() {
           return;
         }
 
-        /* ================================================
-           EVENT ID
-        ================================================ */
-
         const eventId =
           data.id ||
           data.messageId ||
@@ -948,21 +983,12 @@ function Chatbot() {
             eventId
           )
         ) {
-
-          console.log(
-            "♻️ Duplicate client event ignored"
-          );
-
           return;
         }
 
         processedEventsRef.current.add(
           eventId
         );
-
-        /* ================================================
-           ADD MESSAGE
-        ================================================ */
 
         setMessages(
           (prev) => {
@@ -1014,11 +1040,6 @@ function Chatbot() {
       "chatbot-message",
       (data) => {
 
-        console.log(
-          "💬 Chatbot message:",
-          data
-        );
-
         if (!data?.message) {
           return;
         }
@@ -1042,11 +1063,6 @@ function Chatbot() {
             eventId
           )
         ) {
-
-          console.log(
-            "♻️ Duplicate chatbot event ignored"
-          );
-
           return;
         }
 
@@ -1098,8 +1114,6 @@ function Chatbot() {
 
     /* =====================================================
        AI RESPONSE
-       
-       Prevent duplicate AI messages.
     ===================================================== */
 
     channel.bind(
@@ -1129,28 +1143,16 @@ function Chatbot() {
           data.eventId ||
           `ai-${data.createdAt || ""}-${normalizedReply}`;
 
-        /* ================================================
-           EVENT ID DUPLICATE
-        ================================================ */
-
         if (
           processedEventsRef.current.has(
             eventId
           )
         ) {
 
-          console.log(
-            "♻️ Duplicate AI response ignored"
-          );
-
           setIsTyping(false);
 
           return;
         }
-
-        /* ================================================
-           MESSAGE DUPLICATE
-        ================================================ */
 
         setMessages(
           (prev) => {
@@ -1158,8 +1160,7 @@ function Chatbot() {
             const alreadyExists =
               prev.some(
                 (item) =>
-                  item.sender ===
-                    "bot" &&
+                  item.sender === "bot" &&
                   normalizeMessage(
                     item.text
                   ) ===
@@ -1167,10 +1168,6 @@ function Chatbot() {
               );
 
             if (alreadyExists) {
-
-              console.log(
-                "♻️ Duplicate AI message ignored"
-              );
 
               processedEventsRef.current.add(
                 eventId
@@ -1281,12 +1278,11 @@ function Chatbot() {
   }, [
     messages,
     isTyping,
+    activeTab,
   ]);
 
   /* =======================================================
      SEND NORMAL CHAT MESSAGE
-     
-     ONLY /chat API
   ======================================================= */
 
   const sendMessage =
@@ -1309,10 +1305,6 @@ function Chatbot() {
           .toString(36)
           .slice(2)}`;
 
-      /* ================================================
-         SAVE LOCAL MESSAGE
-      ================================================ */
-
       pendingUserMessagesRef.current.push({
         id:
           localMessageId,
@@ -1324,10 +1316,6 @@ function Chatbot() {
           Date.now(),
       });
 
-      /* ================================================
-         REMOVE STALE PENDING MESSAGE
-      ================================================ */
-
       setTimeout(() => {
 
         pendingUserMessagesRef.current =
@@ -1338,10 +1326,6 @@ function Chatbot() {
           );
 
       }, 10000);
-
-      /* ================================================
-         SHOW USER MESSAGE
-      ================================================ */
 
       setMessages(
         (prev) => [
@@ -1365,6 +1349,8 @@ function Chatbot() {
         ]
       );
 
+      setActiveTab("messages");
+
       setInput("");
 
       setIsTyping(
@@ -1379,13 +1365,6 @@ function Chatbot() {
             "VITE_API_URL is missing."
           );
         }
-
-        /* ==============================================
-           NORMAL CHAT API
-           
-           IMPORTANT:
-           Portfolio update API yahan call nahi hogi.
-        ============================================== */
 
         const response =
           await fetch(
@@ -1416,18 +1395,18 @@ function Chatbot() {
         const data =
           await response.json();
 
-        /* ==============================================
-           DIRECT RESPONSE ONLY IF PUSHER DISCONNECTED
-        ============================================== */
+        /*
+          Pusher connected:
+          wait for ai-response.
+
+          Pusher disconnected:
+          use API response directly.
+        */
 
         if (
           !isPusherConnected &&
           data?.reply
         ) {
-
-          setIsTyping(
-            false
-          );
 
           const reply =
             data.reply.trim();
@@ -1437,14 +1416,15 @@ function Chatbot() {
               reply
             );
 
+          setIsTyping(false);
+
           setMessages(
             (prev) => {
 
               const alreadyExists =
                 prev.some(
                   (item) =>
-                    item.sender ===
-                      "bot" &&
+                    item.sender === "bot" &&
                     normalizeMessage(
                       item.text
                     ) ===
@@ -1487,10 +1467,6 @@ function Chatbot() {
           error
         );
 
-        /* ==============================================
-           REMOVE PENDING MESSAGE
-        ============================================== */
-
         pendingUserMessagesRef.current =
           pendingUserMessagesRef.current.filter(
             (item) =>
@@ -1498,15 +1474,9 @@ function Chatbot() {
               localMessageId
           );
 
-        /* ==============================================
-           FALLBACK
-        ============================================== */
-
         setTimeout(() => {
 
-          setIsTyping(
-            false
-          );
+          setIsTyping(false);
 
           setMessages(
             (prev) => {
@@ -1516,17 +1486,19 @@ function Chatbot() {
                   message
                 );
 
+              const normalizedFallback =
+                normalizeMessage(
+                  fallbackText
+                );
+
               const alreadyExists =
                 prev.some(
                   (item) =>
-                    item.sender ===
-                      "bot" &&
+                    item.sender === "bot" &&
                     normalizeMessage(
                       item.text
                     ) ===
-                      normalizeMessage(
-                        fallbackText
-                      )
+                      normalizedFallback
                 );
 
               if (alreadyExists) {
@@ -1556,6 +1528,28 @@ function Chatbot() {
 
         }, 700);
       }
+    };
+
+  /* =======================================================
+     TASK TOGGLE
+  ======================================================= */
+
+  const toggleTask =
+    (taskId) => {
+
+      setTasks(
+        (prev) =>
+          prev.map(
+            (task) =>
+              task.id === taskId
+                ? {
+                    ...task,
+                    completed:
+                      !task.completed,
+                  }
+                : task
+          )
+      );
     };
 
   /* =======================================================
@@ -1590,6 +1584,10 @@ function Chatbot() {
         true
       );
 
+      setActiveTab(
+        "home"
+      );
+
       setNotificationCount(
         0
       );
@@ -1608,6 +1606,612 @@ function Chatbot() {
       setIsOpen(
         false
       );
+    };
+
+  /* =======================================================
+     TAB ICON
+  ======================================================= */
+
+  const getTabIcon =
+    (tab) => {
+
+      switch (tab) {
+
+        case "home":
+          return "fas fa-house";
+
+        case "messages":
+          return "fas fa-message";
+
+        case "help":
+          return "fas fa-circle-question";
+
+        case "tasks":
+          return "fas fa-list-check";
+
+        default:
+          return "fas fa-house";
+      }
+    };
+
+  /* =======================================================
+     TAB TITLE
+  ======================================================= */
+
+  const getTabTitle =
+    (tab) => {
+
+      switch (tab) {
+
+        case "home":
+          return "Home";
+
+        case "messages":
+          return "Messages";
+
+        case "help":
+          return "Help";
+
+        case "tasks":
+          return "Tasks";
+
+        default:
+          return "Home";
+      }
+    };
+
+  /* =======================================================
+     RENDER MESSAGES
+  ======================================================= */
+
+  const renderMessages =
+    () => {
+
+      return (
+        <div className="chatbot-messages">
+
+          {messages.map(
+            (message) => (
+
+              <motion.div
+                key={
+                  message.id
+                }
+
+                className={`chat-message ${
+                  message.sender ===
+                  "user"
+                    ? "user-message"
+                    : "bot-message"
+                } ${
+                  message.type ===
+                  "portfolio-update"
+                    ? "portfolio-message"
+                    : ""
+                }`}
+
+                initial={{
+                  opacity: 0,
+                  y: 10,
+                  scale: 0.97,
+                }}
+
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                }}
+
+                transition={{
+                  duration:
+                    0.25,
+                }}
+              >
+
+                {message.sender ===
+                  "bot" && (
+
+                  <div className="message-avatar">
+
+                    <i className="fas fa-robot"></i>
+
+                  </div>
+                )}
+
+                <div className="message-bubble">
+
+                  <div
+                    className="message-content"
+                    style={{
+                      whiteSpace:
+                        "pre-line",
+                    }}
+                  >
+                    {message.text}
+                  </div>
+
+                  <span className="message-time">
+
+                    {message.sender ===
+                    "user"
+                      ? "You"
+                      : message.type ===
+                        "portfolio-update"
+                      ? "Portfolio Update"
+                      : "Assistant"}
+
+                  </span>
+
+                </div>
+
+              </motion.div>
+            )
+          )}
+
+          {isTyping && (
+
+            <motion.div
+              className="chat-message bot-message"
+
+              initial={{
+                opacity: 0,
+                y: 8,
+              }}
+
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+            >
+
+              <div className="message-avatar">
+
+                <i className="fas fa-robot"></i>
+
+              </div>
+
+              <div className="typing-bubble">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+              </div>
+
+            </motion.div>
+          )}
+
+          <div
+            ref={
+              messagesEndRef
+            }
+          />
+
+        </div>
+      );
+    };
+
+  /* =======================================================
+     HOME TAB
+  ======================================================= */
+
+  const renderHome =
+    () => {
+
+      return (
+        <div className="chatbot-tab-content">
+
+          <div className="chatbot-welcome">
+
+            <div className="welcome-icon">
+
+              <i className="fas fa-sparkles"></i>
+
+            </div>
+
+            <div>
+
+              <h4>
+                How can I help?
+              </h4>
+
+              <p>
+                Ask me about Asad's
+                experience, skills,
+                projects or contact
+                details.
+              </p>
+
+            </div>
+
+          </div>
+
+          <div className="quick-questions">
+
+            <div className="quick-title">
+
+              <i className="fas fa-bolt"></i>
+
+              Quick questions
+
+            </div>
+
+            <div className="quick-question-list">
+
+              {quickQuestions.map(
+                (question) => (
+
+                  <button
+                    key={
+                      question
+                    }
+
+                    type="button"
+
+                    onClick={() => {
+
+                      setActiveTab(
+                        "messages"
+                      );
+
+                      sendMessage(
+                        question
+                      );
+
+                    }}
+
+                    disabled={
+                      isTyping
+                    }
+                  >
+
+                    {question}
+
+                    <i className="fas fa-arrow-right"></i>
+
+                  </button>
+                )
+              )}
+
+            </div>
+
+          </div>
+
+          <div className="chatbot-home-cards">
+
+            <button
+              type="button"
+              onClick={() =>
+                setActiveTab(
+                  "messages"
+                )
+              }
+              className="chatbot-home-card"
+            >
+
+              <i className="fas fa-message"></i>
+
+              <span>
+                Start a conversation
+              </span>
+
+              <small>
+                Ask anything about the portfolio
+              </small>
+
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                setActiveTab(
+                  "tasks"
+                )
+              }
+              className="chatbot-home-card"
+            >
+
+              <i className="fas fa-list-check"></i>
+
+              <span>
+                View Tasks
+              </span>
+
+              <small>
+                Check portfolio-related tasks
+              </small>
+
+            </button>
+
+          </div>
+
+        </div>
+      );
+    };
+
+  /* =======================================================
+     HELP TAB
+  ======================================================= */
+
+  const renderHelp =
+    () => {
+
+      return (
+        <div className="chatbot-tab-content">
+
+          <div className="chatbot-section-heading">
+
+            <div className="section-icon">
+
+              <i className="fas fa-circle-question"></i>
+
+            </div>
+
+            <div>
+
+              <h4>
+                How can I help?
+              </h4>
+
+              <p>
+                You can use the assistant to explore the portfolio.
+              </p>
+
+            </div>
+
+          </div>
+
+          <div className="chatbot-help-list">
+
+            <div className="chatbot-help-item">
+
+              <i className="fas fa-user"></i>
+
+              <div>
+
+                <strong>
+                  About Asad
+                </strong>
+
+                <span>
+                  Ask about experience, background and professional profile.
+                </span>
+
+              </div>
+
+            </div>
+
+            <div className="chatbot-help-item">
+
+              <i className="fas fa-code"></i>
+
+              <div>
+
+                <strong>
+                  Skills & Technologies
+                </strong>
+
+                <span>
+                  Ask about React, Node.js, MongoDB, AWS, AI and other technologies.
+                </span>
+
+              </div>
+
+            </div>
+
+            <div className="chatbot-help-item">
+
+              <i className="fas fa-folder-open"></i>
+
+              <div>
+
+                <strong>
+                  Projects
+                </strong>
+
+                <span>
+                  Ask about enterprise applications, SaaS and AI projects.
+                </span>
+
+              </div>
+
+            </div>
+
+            <div className="chatbot-help-item">
+
+              <i className="fas fa-envelope"></i>
+
+              <div>
+
+                <strong>
+                  Contact
+                </strong>
+
+                <span>
+                  Ask how to contact or hire Asad.
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <button
+            type="button"
+            className="chatbot-help-start"
+            onClick={() =>
+              setActiveTab(
+                "messages"
+              )
+            }
+          >
+
+            <i className="fas fa-message"></i>
+
+            Start Conversation
+
+          </button>
+
+        </div>
+      );
+    };
+
+  /* =======================================================
+     TASKS TAB
+  ======================================================= */
+
+  const renderTasks =
+    () => {
+
+      const completedTasks =
+        tasks.filter(
+          (task) =>
+            task.completed
+        ).length;
+
+      return (
+        <div className="chatbot-tab-content">
+
+          <div className="chatbot-section-heading">
+
+            <div className="section-icon">
+
+              <i className="fas fa-list-check"></i>
+
+            </div>
+
+            <div>
+
+              <h4>
+                Tasks
+              </h4>
+
+              <p>
+                Portfolio tasks and updates.
+              </p>
+
+            </div>
+
+          </div>
+
+          <div className="task-progress">
+
+            <div className="task-progress-top">
+
+              <span>
+                Progress
+              </span>
+
+              <strong>
+                {completedTasks}/{tasks.length}
+              </strong>
+
+            </div>
+
+            <div className="task-progress-bar">
+
+              <span
+                style={{
+                  width:
+                    tasks.length
+                      ? `${
+                          (completedTasks /
+                            tasks.length) *
+                          100
+                        }%`
+                      : "0%",
+                }}
+              />
+
+            </div>
+
+          </div>
+
+          <div className="chatbot-task-list">
+
+            {tasks.map(
+              (task) => (
+
+                <button
+                  type="button"
+                  key={
+                    task.id
+                  }
+
+                  className={`chatbot-task-item ${
+                    task.completed
+                      ? "completed"
+                      : ""
+                  }`}
+
+                  onClick={() =>
+                    toggleTask(
+                      task.id
+                    )
+                  }
+                >
+
+                  <span className="task-check">
+
+                    <i
+                      className={
+                        task.completed
+                          ? "fas fa-check"
+                          : "far fa-circle"
+                      }
+                    />
+
+                  </span>
+
+                  <span className="task-info">
+
+                    <strong>
+                      {task.title}
+                    </strong>
+
+                    <small>
+                      {task.description}
+                    </small>
+
+                  </span>
+
+                  <i className="fas fa-chevron-right task-arrow"></i>
+
+                </button>
+              )
+            )}
+
+          </div>
+
+        </div>
+      );
+    };
+
+  /* =======================================================
+     TAB CONTENT
+  ======================================================= */
+
+  const renderTabContent =
+    () => {
+
+      switch (activeTab) {
+
+        case "home":
+          return renderHome();
+
+        case "messages":
+          return renderMessages();
+
+        case "help":
+          return renderHelp();
+
+        case "tasks":
+          return renderTasks();
+
+        default:
+          return renderHome();
+      }
     };
 
   /* =======================================================
@@ -1808,221 +2412,44 @@ function Chatbot() {
             </div>
 
             {/* =================================================
-                BODY
+                CONTENT
             ================================================= */}
 
             <div className="chatbot-body">
 
-              {/* =================================================
-                  WELCOME
-              ================================================= */}
+              <AnimatePresence mode="wait">
 
-              <div className="chatbot-welcome">
-
-                <div className="welcome-icon">
-
-                  <i className="fas fa-sparkles"></i>
-
-                </div>
-
-                <div>
-
-                  <h4>
-                    How can I help?
-                  </h4>
-
-                  <p>
-                    Ask me about Asad's
-                    experience, skills,
-                    projects or contact
-                    details.
-                  </p>
-
-                </div>
-
-              </div>
-
-              {/* =================================================
-                  MESSAGES
-              ================================================= */}
-
-              <div className="chatbot-messages">
-
-                {messages.map(
-                  (message) => (
-
-                    <motion.div
-                      key={
-                        message.id
-                      }
-
-                      className={`chat-message ${
-                        message.sender ===
-                        "user"
-                          ? "user-message"
-                          : "bot-message"
-                      } ${
-                        message.type ===
-                        "portfolio-update"
-                          ? "portfolio-message"
-                          : ""
-                      }`}
-
-                      initial={{
-                        opacity: 0,
-                        y: 10,
-                        scale: 0.97,
-                      }}
-
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                      }}
-
-                      transition={{
-                        duration:
-                          0.25,
-                      }}
-                    >
-
-                      {message.sender ===
-                        "bot" && (
-
-                        <div className="message-avatar">
-
-                          <i className="fas fa-robot"></i>
-
-                        </div>
-                      )}
-
-                      <div className="message-bubble">
-
-                        <div
-                          className="message-content"
-                          style={{
-                            whiteSpace:
-                              "pre-line",
-                          }}
-                        >
-                          {message.text}
-                        </div>
-
-                        <span className="message-time">
-
-                          {message.sender ===
-                          "user"
-                            ? "You"
-                            : message.type ===
-                              "portfolio-update"
-                            ? "Portfolio Update"
-                            : "Assistant"}
-
-                        </span>
-
-                      </div>
-
-                    </motion.div>
-                  )
-                )}
-
-                {/* =================================================
-                    TYPING
-                ================================================= */}
-
-                {isTyping && (
-
-                  <motion.div
-                    className="chat-message bot-message"
-
-                    initial={{
-                      opacity: 0,
-                      y: 8,
-                    }}
-
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                  >
-
-                    <div className="message-avatar">
-
-                      <i className="fas fa-robot"></i>
-
-                    </div>
-
-                    <div className="typing-bubble">
-
-                      <span></span>
-                      <span></span>
-                      <span></span>
-
-                    </div>
-
-                  </motion.div>
-                )}
-
-                <div
-                  ref={
-                    messagesEndRef
+                <motion.div
+                  key={
+                    activeTab
                   }
-                />
 
-              </div>
+                  initial={{
+                    opacity: 0,
+                    x: 8,
+                  }}
 
-              {/* =================================================
-                  QUICK QUESTIONS
-              ================================================= */}
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                  }}
 
-              {messages.length <=
-                1 && (
+                  exit={{
+                    opacity: 0,
+                    x: -8,
+                  }}
 
-                <div className="quick-questions">
+                  transition={{
+                    duration:
+                      0.18,
+                  }}
+                >
 
-                  <div className="quick-title">
+                  {renderTabContent()}
 
-                    <i className="fas fa-bolt"></i>
+                </motion.div>
 
-                    Quick questions
-
-                  </div>
-
-                  <div className="quick-question-list">
-
-                    {quickQuestions.map(
-                      (question) => (
-
-                        <button
-                          key={
-                            question
-                          }
-
-                          type="button"
-
-                          onClick={() =>
-                            sendMessage(
-                              question
-                            )
-                          }
-
-                          disabled={
-                            isTyping
-                          }
-                        >
-
-                          {question}
-
-                          <i className="fas fa-arrow-right"></i>
-
-                        </button>
-                      )
-                    )}
-
-                  </div>
-
-                </div>
-              )}
+              </AnimatePresence>
 
             </div>
 
@@ -2061,86 +2488,229 @@ function Chatbot() {
 
             {/* =================================================
                 INPUT
+                Only visible on Messages tab
             ================================================= */}
 
-            <div className="chatbot-input-area">
+            {activeTab ===
+              "messages" && (
 
-              <div className="chatbot-input-wrapper">
+              <div className="chatbot-input-area">
 
-                <i className="fas fa-message chatbot-input-icon"></i>
+                <div className="chatbot-input-wrapper">
 
-                <input
-                  type="text"
-                  value={
-                    input
-                  }
+                  <i className="fas fa-message chatbot-input-icon"></i>
 
-                  onChange={(
-                    event
-                  ) =>
-                    setInput(
-                      event.target.value
-                    )
-                  }
+                  <input
+                    type="text"
+                    value={
+                      input
+                    }
 
-                  onKeyDown={
-                    handleKeyDown
-                  }
+                    onChange={(
+                      event
+                    ) =>
+                      setInput(
+                        event.target.value
+                      )
+                    }
 
-                  placeholder="Type your message..."
-                  aria-label="Type your message"
+                    onKeyDown={
+                      handleKeyDown
+                    }
 
-                  disabled={
-                    isTyping
-                  }
-                />
+                    placeholder="Type your message..."
+                    aria-label="Type your message"
 
-                <button
-                  type="button"
+                    disabled={
+                      isTyping
+                    }
+                  />
 
-                  onClick={() =>
-                    sendMessage()
-                  }
+                  <button
+                    type="button"
 
-                  disabled={
-                    !input.trim() ||
-                    isTyping
-                  }
+                    onClick={() =>
+                      sendMessage()
+                    }
 
-                  aria-label="Send message"
-                >
+                    disabled={
+                      !input.trim() ||
+                      isTyping
+                    }
 
-                  <i className="fas fa-paper-plane"></i>
+                    aria-label="Send message"
+                  >
 
-                </button>
+                    <i className="fas fa-paper-plane"></i>
+
+                  </button>
+
+                </div>
+
+                <div className="chatbot-powered">
+
+                  <span>
+
+                    <i className="fas fa-shield-halved"></i>
+
+                    Secure Portfolio Assistant
+
+                  </span>
+
+                  <span className="powered-dot"></span>
+
+                  <span>
+
+                    {isPusherConnected
+                      ? "Live Updates"
+                      : "Connecting"}
+
+                  </span>
+
+                </div>
 
               </div>
+            )}
 
-              {/* =================================================
-                  POWERED
-              ================================================= */}
+            {/* =================================================
+                BOTTOM NAVIGATION
+            ================================================= */}
 
-              <div className="chatbot-powered">
+            <div className="chatbot-bottom-nav">
 
-                <span>
+              <button
+                type="button"
+                className={
+                  activeTab === "home"
+                    ? "active"
+                    : ""
+                }
 
-                  <i className="fas fa-shield-halved"></i>
+                onClick={() =>
+                  setActiveTab(
+                    "home"
+                  )
+                }
+              >
 
-                  Secure Portfolio Assistant
+                <span className="chatbot-nav-icon">
+
+                  <i className="fas fa-house"></i>
 
                 </span>
 
-                <span className="powered-dot"></span>
-
                 <span>
+                  Home
+                </span>
 
-                  {isPusherConnected
-                    ? "Live Updates"
-                    : "Connecting"}
+              </button>
+
+              <button
+                type="button"
+                className={
+                  activeTab === "messages"
+                    ? "active"
+                    : ""
+                }
+
+                onClick={() =>
+                  setActiveTab(
+                    "messages"
+                  )
+                }
+              >
+
+                <span className="chatbot-nav-icon">
+
+                  <i className="fas fa-message"></i>
+
+                  {notificationCount >
+                    0 && (
+
+                    <span className="chatbot-nav-badge">
+
+                      {notificationCount >
+                        9
+                        ? "9+"
+                        : notificationCount}
+
+                    </span>
+                  )}
 
                 </span>
 
-              </div>
+                <span>
+                  Messages
+                </span>
+
+              </button>
+
+              <button
+                type="button"
+                className={
+                  activeTab === "help"
+                    ? "active"
+                    : ""
+                }
+
+                onClick={() =>
+                  setActiveTab(
+                    "help"
+                  )
+                }
+              >
+
+                <span className="chatbot-nav-icon">
+
+                  <i className="fas fa-circle-question"></i>
+
+                </span>
+
+                <span>
+                  Help
+                </span>
+
+              </button>
+
+              <button
+                type="button"
+                className={
+                  activeTab === "tasks"
+                    ? "active"
+                    : ""
+                }
+
+                onClick={() =>
+                  setActiveTab(
+                    "tasks"
+                  )
+                }
+              >
+
+                <span className="chatbot-nav-icon">
+
+                  <i className="fas fa-list-check"></i>
+
+                  {tasks.some(
+                    (task) =>
+                      !task.completed
+                  ) && (
+
+                    <span className="chatbot-nav-badge task-badge">
+                      {tasks.filter(
+                        (task) =>
+                          !task.completed
+                      ).length}
+                    </span>
+                  )}
+
+                </span>
+
+                <span>
+                  Tasks
+                </span>
+
+              </button>
 
             </div>
 
