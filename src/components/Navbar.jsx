@@ -381,6 +381,40 @@ function Navbar() {
       .split(" ")[0];
   };
 
+  /* =====================================================
+     AVATAR
+  ===================================================== */
+
+  const renderAvatar = (className = "nav-user-avatar") => {
+    if (user?.avatar) {
+      return (
+        <span className={className}>
+          <img
+            src={user.avatar}
+            alt={user.name || "User"}
+            className="user-avatar-image"
+            onError={(event) => {
+              event.currentTarget.style.display = "none";
+              event.currentTarget.parentElement.classList.add(
+                "avatar-image-error"
+              );
+            }}
+          />
+
+          <span className="avatar-fallback">
+            {getUserInitial()}
+          </span>
+        </span>
+      );
+    }
+
+    return (
+      <span className={className}>
+        {getUserInitial()}
+      </span>
+    );
+  };
+
   return (
     <header
       className={`navbar ${
@@ -481,9 +515,9 @@ function Navbar() {
 
                 <div className="mobile-user-info">
 
-                  <div className="mobile-user-avatar">
-                    {getUserInitial()}
-                  </div>
+                  {renderAvatar(
+                    "mobile-user-avatar"
+                  )}
 
                   <div>
                     <strong>
@@ -611,9 +645,9 @@ function Navbar() {
 
                   {/* AVATAR */}
 
-                  <span className="nav-user-avatar">
-                    {getUserInitial()}
-                  </span>
+                  {renderAvatar(
+                    "nav-user-avatar"
+                  )}
 
                   {/* NAME */}
 
@@ -672,9 +706,9 @@ function Navbar() {
 
                       <div className="profile-user-info">
 
-                        <div className="profile-large-avatar">
-                          {getUserInitial()}
-                        </div>
+                        {renderAvatar(
+                          "profile-large-avatar"
+                        )}
 
                         <div className="profile-user-details">
 

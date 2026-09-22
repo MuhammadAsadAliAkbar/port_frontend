@@ -20,7 +20,7 @@ function SignupPopup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const [avatarFile, setAvatarFile] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -129,6 +129,17 @@ function SignupPopup() {
     try {
       setIsLoading(true);
 
+      const formData = new FormData();
+
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("confirmPassword", confirmPassword);
+
+      if (avatarFile) {
+        formData.append("avatar", avatarFile);
+      }
+
       const API_URL = import.meta.env.VITE_API_URL;
 
       if (!API_URL) {
@@ -141,17 +152,7 @@ function SignupPopup() {
         `${API_URL}/auth/register`,
         {
           method: "POST",
-
-          headers: {
-            "Content-Type": "application/json",
-          },
-
-          body: JSON.stringify({
-            name: name.trim(),
-            email: email.trim().toLowerCase(),
-            password,
-            confirmPassword
-          }),
+          body: formData
         }
       );
 
@@ -165,6 +166,7 @@ function SignupPopup() {
         throw new Error(
           data.message || "Registration failed."
         );
+       
       }
 
       /* =====================================================
@@ -230,7 +232,7 @@ function SignupPopup() {
 
       setError(
         error.message ||
-          "Something went wrong. Please try again."
+        "Something went wrong. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -379,6 +381,97 @@ function SignupPopup() {
               className="signup-form"
               onSubmit={handleSubmit}
             >
+
+             <div className="avatar-upload">
+  <input
+    id="avatar-input"
+    type="file"
+    accept="image/png,image/jpeg,image/webp"
+    onChange={(e) => {
+      const file = e.target.files?.[0] || null;
+      setAvatarFile(file);
+    }}
+    hidden
+  />
+
+  <label htmlFor="avatar-input" className="avatar-upload-box">
+    <div className="avatar-preview">
+      {avatarFile ? (
+        <img
+          src={URL.createObjectURL(avatarFile)}
+          alt="Avatar Preview"
+        />
+      ) : (
+        <div className="avatar-placeholder">
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+          >
+            <path d="M12 16V4" />
+            <path d="M8 8l4-4 4 4" />
+            <path d="M4 16.5v1.5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1.5" />
+          </svg>
+        </div>
+      )}
+
+      <div className="avatar-camera">
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M14.5 4h-5L7.5 7H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2.5l-2-3Z" />
+          <circle cx="12" cy="13" r="3.5" />
+        </svg>
+      </div>
+    </div>
+
+    <div className="avatar-upload-content">
+      <span className="avatar-upload-title">
+        Profile Picture
+      </span>
+
+      <span className="avatar-upload-subtitle">
+        Click to upload your photo
+      </span>
+
+      <span className="avatar-upload-format">
+        PNG, JPG or WEBP • Max 5MB
+      </span>
+    </div>
+  </label>
+
+  {avatarFile && (
+    <div className="avatar-selected">
+      <div className="avatar-file-info">
+        <span className="avatar-file-name">
+          {avatarFile.name}
+        </span>
+
+        <span className="avatar-file-size">
+          {(avatarFile.size / 1024 / 1024).toFixed(2)} MB
+        </span>
+      </div>
+
+      <button
+        type="button"
+        className="avatar-remove"
+        onClick={() => setAvatarFile(null)}
+        aria-label="Remove avatar"
+      >
+        ×
+      </button>
+    </div>
+  )}
+</div>
+
               {/* NAME */}
 
               <div className="signup-field">
@@ -613,9 +706,22 @@ function SignupPopup() {
                 Sign In
               </button>
             </div>
+            {/* {avatarFile && (
+              <img
+                src={URL.createObjectURL(avatarFile)}
+                alt="Avatar Preview"
+                width={80}
+                height={80}
+                style={{
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+            )} */}
           </motion.div>
         </motion.div>
       )}
+
     </AnimatePresence>
   );
 }

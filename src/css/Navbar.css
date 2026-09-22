@@ -2055,3 +2055,128 @@ body[data-theme="light"]
   }
 
 }
+
+/* =====================================================
+   USER AVATAR IMAGE
+===================================================== */
+
+.user-avatar-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.avatar-fallback {
+  display: none;
+}
+
+/* Agar image load na ho */
+.avatar-image-error .user-avatar-image {
+  display: none;
+}
+
+.avatar-image-error .avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* =====================================================
+   NAVBAR AVATAR
+===================================================== */
+
+.nav-user-avatar {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #7c3aed
+  );
+
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* =====================================================
+   LARGE PROFILE AVATAR
+===================================================== */
+
+.profile-large-avatar {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #7c3aed
+  );
+
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* =====================================================
+   MOBILE AVATAR
+===================================================== */
+
+.mobile-user-avatar {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #7c3aed
+  );
+
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* =====================================================
+   LIGHT MODE
+===================================================== */
+
+[data-theme="light"] .nav-user-avatar,
+[data-theme="light"] .profile-large-avatar,
+[data-theme="light"] .mobile-user-avatar {
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #6366f1
+  );
+}

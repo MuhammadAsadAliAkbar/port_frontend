@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -136,7 +135,7 @@ const initialMessages = {
 
 function MessageChat() {
   /* =======================================================
-     CHAT OPEN/CLOSE
+     CHAT OPEN / CLOSE
   ======================================================= */
 
   const [isOpen, setIsOpen] = useState(false);
@@ -216,14 +215,12 @@ function MessageChat() {
      window.dispatchEvent(
        new CustomEvent("open-message-chat")
      );
-
   ======================================================= */
 
   useEffect(() => {
     const handleOpenMessage = () => {
       setIsOpen(true);
 
-      // Desktop default
       if (window.innerWidth > 768) {
         setShowUsers(true);
       }
@@ -244,13 +241,6 @@ function MessageChat() {
 
   /* =======================================================
      CLOSE CHAT FROM OUTSIDE
-
-     Optional:
-
-     window.dispatchEvent(
-       new CustomEvent("close-message-chat")
-     );
-
   ======================================================= */
 
   useEffect(() => {
@@ -359,61 +349,53 @@ function MessageChat() {
 
   return (
     <>
-      {/* =====================================================
-          NOTE:
-
-          MessageChat floating button has been completely
-          removed.
-
-          Chat opens from Footer using:
-
-          window.dispatchEvent(
-            new CustomEvent("open-message-chat")
-          );
-      ===================================================== */}
-
       <AnimatePresence>
         {isOpen && (
           <motion.div
             className="message-chat-overlay"
+
             initial={{
               opacity: 0,
             }}
+
             animate={{
               opacity: 1,
             }}
+
             exit={{
               opacity: 0,
             }}
           >
-
             {/* =================================================
                 CHAT WINDOW
             ================================================= */}
 
             <motion.div
               className="message-chat-window"
+
               initial={{
                 opacity: 0,
                 y: 35,
                 scale: 0.96,
               }}
+
               animate={{
                 opacity: 1,
                 y: 0,
                 scale: 1,
               }}
+
               exit={{
                 opacity: 0,
                 y: 35,
                 scale: 0.96,
               }}
+
               transition={{
                 duration: 0.25,
                 ease: "easeOut",
               }}
             >
-
               {/* =================================================
                   TOP HEADER
               ================================================= */}
@@ -430,12 +412,15 @@ function MessageChat() {
                         ? "drawer-active"
                         : ""
                     }`}
+
                     onClick={toggleDrawer}
+
                     aria-label={
                       showUsers
                         ? "Close conversations"
                         : "Open conversations"
                     }
+
                     title={
                       showUsers
                         ? "Close conversations"
@@ -473,8 +458,11 @@ function MessageChat() {
 
                   <button
                     className="message-icon-button"
+
                     onClick={closeChat}
+
                     aria-label="Close messages"
+
                     title="Close"
                   >
                     <X size={19} />
@@ -497,7 +485,6 @@ function MessageChat() {
                 <AnimatePresence
                   initial={false}
                 >
-
                   {showUsers && (
                     <motion.aside
                       className="message-users-sidebar"
@@ -525,10 +512,7 @@ function MessageChat() {
                         ease: "easeInOut",
                       }}
                     >
-
-                      {/* =================================================
-                          SEARCH
-                      ================================================= */}
+                      {/* SEARCH */}
 
                       <div className="message-search">
 
@@ -538,6 +522,7 @@ function MessageChat() {
                           type="text"
                           placeholder="Search conversations..."
                           value={search}
+
                           onChange={(event) =>
                             setSearch(
                               event.target.value
@@ -547,17 +532,13 @@ function MessageChat() {
 
                       </div>
 
-                      {/* =================================================
-                          LABEL
-                      ================================================= */}
+                      {/* LABEL */}
 
                       <div className="conversation-label">
                         Recent Conversations
                       </div>
 
-                      {/* =================================================
-                          USERS
-                      ================================================= */}
+                      {/* USERS */}
 
                       <div className="message-users-list">
 
@@ -565,19 +546,20 @@ function MessageChat() {
                           (user) => (
                             <button
                               key={user.id}
+
                               className={`message-user-item ${
                                 selectedUserId ===
                                 user.id
                                   ? "active"
                                   : ""
                               }`}
+
                               onClick={() =>
                                 openConversation(
                                   user.id
                                 )
                               }
                             >
-
                               {/* Avatar */}
 
                               <div className="message-user-avatar-wrapper">
@@ -633,7 +615,7 @@ function MessageChat() {
                           )
                         )}
 
-                        {/* No Users */}
+                        {/* NO USERS */}
 
                         {filteredUsers.length ===
                           0 && (
@@ -654,7 +636,6 @@ function MessageChat() {
 
                     </motion.aside>
                   )}
-
                 </AnimatePresence>
 
                 {/* =================================================
@@ -669,8 +650,6 @@ function MessageChat() {
 
                   {selectedUser && (
                     <div className="conversation-header">
-
-                      {/* User */}
 
                       <div className="conversation-user">
 
@@ -753,15 +732,11 @@ function MessageChat() {
 
                   <div className="messages-container">
 
-                    {/* Date */}
-
                     <div className="chat-date">
                       <span>
                         Today
                       </span>
                     </div>
-
-                    {/* Message List */}
 
                     {(messages[
                       selectedUserId
@@ -773,26 +748,27 @@ function MessageChat() {
                       return (
                         <motion.div
                           key={item.id}
+
                           className={`message-row ${
                             isMine
                               ? "message-row-mine"
                               : "message-row-user"
                           }`}
+
                           initial={{
                             opacity: 0,
                             y: 8,
                           }}
+
                           animate={{
                             opacity: 1,
                             y: 0,
                           }}
+
                           transition={{
                             duration: 0.2,
                           }}
                         >
-
-                          {/* Other User Avatar */}
-
                           {!isMine &&
                             selectedUser && (
                               <div className="small-avatar">
@@ -801,8 +777,6 @@ function MessageChat() {
                                 }
                               </div>
                             )}
-
-                          {/* Message Bubble */}
 
                           <div
                             className={`message-bubble ${
@@ -848,31 +822,41 @@ function MessageChat() {
 
                       <textarea
                         value={message}
+
                         onChange={(event) =>
                           setMessage(
                             event.target.value
                           )
                         }
+
                         onKeyDown={
                           handleKeyDown
                         }
+
                         placeholder="Write a message..."
+
                         rows={1}
                       />
 
                       <motion.button
                         type="button"
+
                         className="send-message-button"
+
                         onClick={sendMessage}
+
                         disabled={
                           !message.trim()
                         }
+
                         whileHover={{
                           scale: 1.04,
                         }}
+
                         whileTap={{
                           scale: 0.94,
                         }}
+
                         aria-label="Send message"
                       >
                         <Send size={17} />
@@ -891,7 +875,6 @@ function MessageChat() {
               </div>
 
             </motion.div>
-
           </motion.div>
         )}
       </AnimatePresence>
@@ -900,4 +883,3 @@ function MessageChat() {
 }
 
 export default MessageChat;
-
