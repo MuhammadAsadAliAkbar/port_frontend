@@ -50,6 +50,9 @@ function Navbar() {
 
   const profileRef = useRef(null);
 
+  const API_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "";
+
   /* =====================================================
      THEME
   ===================================================== */
@@ -339,18 +342,137 @@ function Navbar() {
      LOGOUT
   ===================================================== */
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
+const handleLogout = async () => {
+  try {
+    // ============================================
+    // GET TOKEN
+    // ============================================
+
+    const token =
+      localStorage.getItem("authToken") ||
+      localStorage.getItem("accessToken") ||
+      localStorage.getItem("token");
+
+    // ============================================
+    // GET USER FROM LOCAL STORAGE
+    // ============================================
+
+    const storedUser =
+      localStorage.getItem("user");
+
+    let user = null;
+
+    try {
+      user = storedUser
+        ? JSON.parse(storedUser)
+        : null;
+    } catch (error) {
+      console.error(
+        "Invalid user data in localStorage:",
+        error
+      );
+    }
+
+    // ============================================
+    // GET USER ID
+    // ============================================
+
+    const userId =
+      user?._id ||
+      user?.id ||
+      user?.userId;
+
+    console.log(
+      "Logout User ID:",
+      userId
+    );
+
+    // ============================================
+    // UPDATE ONLINE STATUS -> FALSE
+    // ============================================
+
+    if (token && userId) {
+      const response = await fetch(
+        `${API_URL}/auth/logout`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            Authorization:
+              `Bearer ${token}`,
+          },
+
+          body: JSON.stringify({
+            userId: userId,
+          }),
+        }
+      );
+
+      const data =
+        await response.json();
+
+      console.log(
+        "Logout API Response:",
+        data
+      );
+
+      if (!response.ok) {
+        console.error(
+          "Logout API failed:",
+          data?.message
+        );
+      }
+    } else {
+      console.warn(
+        "Token or User ID missing"
+      );
+    }
+  } catch (error) {
+    console.error(
+      "Logout API error:",
+      error
+    );
+  } finally {
+    // ============================================
+    // CLEAR LOCAL AUTH DATA
+    // ============================================
+
+    localStorage.removeItem(
+      "authToken"
+    );
+
+    localStorage.removeItem(
+      "accessToken"
+    );
+
+    localStorage.removeItem(
+      "token"
+    );
+
+    localStorage.removeItem(
+      "user"
+    );
+
+    // ============================================
+    // RESET STATE
+    // ============================================
 
     setUser(null);
     setProfileOpen(false);
     setMenuOpen(false);
 
+    // ============================================
+    // GLOBAL LOGOUT EVENT
+    // ============================================
+
     window.dispatchEvent(
       new CustomEvent("auth-logout")
     );
-  };
+  }
+};
 
   /* =====================================================
      USER INITIAL
@@ -533,19 +655,25 @@ function Navbar() {
 
                 {/* DASHBOARD */}
 
-                <button
-                  type="button"
-                  className="mobile-dashboard-btn"
-                  onClick={
-                    handleDashboard
-                  }
-                >
-                  <i className="fas fa-chart-line" />
+                  {user?.role?.toLowerCase() === "admin" && (
+                    <button
+                      type="button"
+                      className="profile-menu-item"
+                      onClick={handleDashboard}
+                    >
+                      <span className="profile-menu-icon">
+                        <i className="fas fa-chart-line" />
+                      </span>
 
-                  <span>
-                    Dashboard
-                  </span>
-                </button>
+                      <span>
+                        <strong>Dashboard</strong>
+
+                        <small>
+                          Open your dashboard
+                        </small>
+                      </span>
+                    </button>
+                  )}
 
                 {/* LOGOUT */}
 
@@ -732,29 +860,25 @@ function Navbar() {
                           DASHBOARD
                       ================================================= */}
 
-                      <button
-                        type="button"
-                        className="profile-menu-item"
-                        onClick={
-                          handleDashboard
-                        }
-                      >
+                      {user?.role?.toLowerCase() === "admin" && (
+  <button
+    type="button"
+    className="profile-menu-item"
+    onClick={handleDashboard}
+  >
+    <span className="profile-menu-icon">
+      <i className="fas fa-chart-line" />
+    </span>
 
-                        <span className="profile-menu-icon">
-                          <i className="fas fa-chart-line" />
-                        </span>
+    <span>
+      <strong>Dashboard</strong>
 
-                        <span>
-                          <strong>
-                            Dashboard
-                          </strong>
-
-                          <small>
-                            Open your dashboard
-                          </small>
-                        </span>
-
-                      </button>
+      <small>
+        Open your dashboard
+      </small>
+    </span>
+  </button>
+)}
 
                       {/* =================================================
                           LOGOUT

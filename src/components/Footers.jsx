@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import "../css/Footer.css";
@@ -14,11 +15,39 @@ function Footers() {
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
   /*
-    Message Chat sirf login ke baad show hoga
+    Login state
   */
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return !!localStorage.getItem("authToken");
+    return (
+      !!localStorage.getItem("authToken") ||
+      !!localStorage.getItem("accessToken") ||
+      !!localStorage.getItem("token")
+    );
   });
+
+  /*
+    Current logged-in user
+  */
+  const [user, setUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem("user");
+
+      if (savedUser) {
+        return JSON.parse(savedUser);
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Footer user load error:", error);
+      return null;
+    }
+  });
+
+  /*
+    Admin check
+  */
+  const isAdmin =
+    user?.role?.toLowerCase() === "admin";
 
   /* =================================================
      CHATBOT TOGGLE
@@ -84,6 +113,32 @@ function Footers() {
       );
 
       setIsLoggedIn(true);
+
+      /*
+        Event ke andar user object available ho
+        to direct use karein
+      */
+      if (event.detail) {
+        setUser(event.detail);
+      } else {
+        /*
+          Fallback:
+          localStorage se user read karein
+        */
+        try {
+          const savedUser =
+            localStorage.getItem("user");
+
+          if (savedUser) {
+            setUser(JSON.parse(savedUser));
+          }
+        } catch (error) {
+          console.error(
+            "Footer user parse error:",
+            error
+          );
+        }
+      }
     };
 
     /*
@@ -91,9 +146,13 @@ function Footers() {
       Navbar se event aayega
     */
     const handleAuthLogout = () => {
-      console.log("Footer: User logged out");
+      console.log(
+        "Footer: User logged out"
+      );
 
       setIsLoggedIn(false);
+
+      setUser(null);
 
       /*
         Agar chatbot open ho to close kar do
@@ -108,11 +167,34 @@ function Footers() {
     const handleStorage = (event) => {
       if (
         event.key === "authToken" ||
+        event.key === "accessToken" ||
+        event.key === "token" ||
         event.key === "user"
       ) {
-        setIsLoggedIn(
-          !!localStorage.getItem("authToken")
-        );
+        const token =
+          localStorage.getItem("authToken") ||
+          localStorage.getItem("accessToken") ||
+          localStorage.getItem("token");
+
+        const savedUser =
+          localStorage.getItem("user");
+
+        setIsLoggedIn(!!token);
+
+        if (savedUser) {
+          try {
+            setUser(JSON.parse(savedUser));
+          } catch (error) {
+            console.error(
+              "Footer storage user parse error:",
+              error
+            );
+
+            setUser(null);
+          }
+        } else {
+          setUser(null);
+        }
       }
     };
 
@@ -155,12 +237,18 @@ function Footers() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 300);
+      setShowBackToTop(
+        window.scrollY > 300
+      );
     };
 
-    window.addEventListener("scroll", handleScroll, {
-      passive: true,
-    });
+    window.addEventListener(
+      "scroll",
+      handleScroll,
+      {
+        passive: true,
+      }
+    );
 
     return () => {
       window.removeEventListener(
@@ -228,9 +316,9 @@ function Footers() {
             {/* DESCRIPTION */}
 
             <p className="footer-description">
-              Senior Full Stack Developer passionate about
-              building modern, scalable and high-performance
-              web applications.
+              Senior Full Stack Developer passionate
+              about building modern, scalable and
+              high-performance web applications.
             </p>
 
             {/* SOCIAL LINKS */}
@@ -532,49 +620,50 @@ function Footers() {
 
         {/* =================================================
             MESSAGE CHAT
-            ONLY SHOW WHEN USER IS LOGGED IN
+            ONLY LOGGED-IN NON-ADMIN USERS
         ================================================= */}
 
-        {isLoggedIn && (
-          <motion.button
-            type="button"
-            className="premium-float-btn premium-message"
-            aria-label="Open Message Chat"
-            title="Message Chat"
-            onClick={openMessage}
-            whileHover={{
-              scale: 1.1,
-              y: -5,
-            }}
-            whileTap={{
-              scale: 0.94,
-            }}
-          >
+        {isLoggedIn &&
+          !isAdmin && (
+            <motion.button
+              type="button"
+              className="premium-float-btn premium-message"
+              aria-label="Open Message Chat"
+              title="Message Chat"
+              onClick={openMessage}
+              whileHover={{
+                scale: 1.1,
+                y: -5,
+              }}
+              whileTap={{
+                scale: 0.94,
+              }}
+            >
 
-            <span className="premium-btn-glow"></span>
+              <span className="premium-btn-glow"></span>
 
-            <span className="message-pulse-ring"></span>
+              <span className="message-pulse-ring"></span>
 
-            <span className="premium-btn-inner">
-              <i className="fas fa-comment-dots"></i>
-            </span>
+              <span className="premium-btn-inner">
+                <i className="fas fa-comment-dots"></i>
+              </span>
 
-            <span className="message-notification-dot"></span>
+              <span className="message-notification-dot"></span>
 
-            <span className="premium-float-tooltip">
+              <span className="premium-float-tooltip">
 
-              <strong>
-                Message Chat
-              </strong>
+                <strong>
+                  Message Chat
+                </strong>
 
-              <small>
-                Let's connect
-              </small>
+                <small>
+                  Let's connect
+                </small>
 
-            </span>
+              </span>
 
-          </motion.button>
-        )}
+            </motion.button>
+          )}
 
         {/* =================================================
             AI CHATBOT

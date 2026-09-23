@@ -1,4 +1,6 @@
+
 import { useEffect, useMemo, useState } from "react";
+
 import { AnimatePresence, motion } from "framer-motion";
 
 import {
@@ -12,121 +14,325 @@ import {
   UserRound,
   CheckCheck,
   PanelLeft,
+  Loader2,
+  RefreshCw,
 } from "lucide-react";
 
 import "../css/MessageChat.css";
 
 /* =========================================================
-   DEMO USERS
+   CONFIG
 ========================================================= */
 
-const initialUsers = [
-  {
-    id: "user-001",
-    name: "Muhammad Asad",
-    email: "asad@example.com",
-    avatar: "MA",
-    online: true,
-    lastMessage: "Hello, how can I help you?",
-    time: "10:24 PM",
-    unread: 2,
-  },
+const API_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "");
 
-  {
-    id: "user-002",
-    name: "Ahmed Khan",
-    email: "ahmed@example.com",
-    avatar: "AK",
-    online: true,
-    lastMessage: "I need some help with my account.",
-    time: "10:12 PM",
-    unread: 1,
-  },
-
-  {
-    id: "user-003",
-    name: "Ali Raza",
-    email: "ali@example.com",
-    avatar: "AR",
-    online: false,
-    lastMessage: "Thank you!",
-    time: "09:48 PM",
-    unread: 0,
-  },
-
-  {
-    id: "user-004",
-    name: "Visitor",
-    email: "visitor@example.com",
-    avatar: "V",
-    online: true,
-    lastMessage: "Can you help me?",
-    time: "09:31 PM",
-    unread: 3,
-  },
-];
+const USERS_API = `${API_URL}/auth`;
 
 /* =========================================================
-   DEMO MESSAGES
+   TOKEN HELPER
 ========================================================= */
 
-const initialMessages = {
-  "user-001": [
-    {
-      id: 1,
-      sender: "user-001",
-      text: "Hello, how are you?",
-      time: "10:20 PM",
-    },
+const getToken = () => {
+  return (
+    localStorage.getItem("token") ||
+    localStorage.getItem("accessToken") ||
+    localStorage.getItem("authToken") ||
+    ""
+  );
+};
 
-    {
-      id: 2,
-      sender: "me",
-      text: "I'm good, thanks! How can I help you?",
-      time: "10:21 PM",
-    },
+/* =========================================================
+   AUTH HEADERS
+========================================================= */
 
-    {
-      id: 3,
-      sender: "user-001",
-      text: "I wanted to ask about my project.",
-      time: "10:23 PM",
-    },
-  ],
+const getAuthHeaders = () => {
+  const token = getToken();
 
-  "user-002": [
-    {
-      id: 4,
-      sender: "user-002",
-      text: "I need some help with my account.",
-      time: "10:12 PM",
-    },
-  ],
+  return {
+    "Content-Type": "application/json",
 
-  "user-003": [
-    {
-      id: 5,
-      sender: "me",
-      text: "Is everything okay?",
-      time: "09:45 PM",
-    },
+    ...(token
+      ? {
+          Authorization: `Bearer ${token}`,
+        }
+      : {}),
+  };
+};
 
-    {
-      id: 6,
-      sender: "user-003",
-      text: "Yes, everything is fine. Thank you!",
-      time: "09:48 PM",
-    },
-  ],
+/* =========================================================
+   SIDEBAR DATE / TIME
+========================================================= */
 
-  "user-004": [
-    {
-      id: 7,
-      sender: "user-004",
-      text: "Can you help me?",
-      time: "09:31 PM",
-    },
-  ],
+const formatSidebarDateTime = (date) => {
+  if (!date) {
+    return "";
+  }
+
+  try {
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return "";
+    }
+
+    const now = new Date();
+
+    const isToday =
+      parsedDate.getDate() === now.getDate() &&
+      parsedDate.getMonth() === now.getMonth() &&
+      parsedDate.getFullYear() === now.getFullYear();
+
+    const yesterday = new Date();
+
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const isYesterday =
+      parsedDate.getDate() === yesterday.getDate() &&
+      parsedDate.getMonth() === yesterday.getMonth() &&
+      parsedDate.getFullYear() === yesterday.getFullYear();
+
+    /* ==========================================
+       TODAY
+    ========================================== */
+
+    if (isToday) {
+      return parsedDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    /* ==========================================
+       YESTERDAY
+    ========================================== */
+
+    if (isYesterday) {
+      return "Yesterday";
+    }
+
+    /* ==========================================
+       THIS YEAR
+    ========================================== */
+
+    if (
+      parsedDate.getFullYear() ===
+      now.getFullYear()
+    ) {
+      return parsedDate.toLocaleDateString([], {
+        day: "2-digit",
+        month: "short",
+      });
+    }
+
+    /* ==========================================
+       OLD DATE
+    ========================================== */
+
+    return parsedDate.toLocaleDateString([], {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  } catch {
+    return "";
+  }
+};
+
+/* =========================================================
+   MESSAGE DATE + TIME
+========================================================= */
+
+const formatDateTime = (date) => {
+  if (!date) {
+    return "";
+  }
+
+  try {
+    const messageDate = new Date(date);
+
+    if (Number.isNaN(messageDate.getTime())) {
+      return "";
+    }
+
+    const now = new Date();
+
+    const isToday =
+      messageDate.getDate() === now.getDate() &&
+      messageDate.getMonth() === now.getMonth() &&
+      messageDate.getFullYear() === now.getFullYear();
+
+    const time =
+      messageDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+    if (isToday) {
+      return `Today, ${time}`;
+    }
+
+    return `${messageDate.toLocaleDateString([], {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    })}, ${time}`;
+  } catch {
+    return "";
+  }
+};
+
+/* =========================================================
+   GET INITIALS
+========================================================= */
+
+const getInitials = (user) => {
+  if (!user) {
+    return "U";
+  }
+
+  const name =
+    user.name ||
+    user.fullName ||
+    user.username ||
+    "";
+
+  if (!name) {
+    return "U";
+  }
+
+  return (
+    name
+      .split(" ")
+      .filter(Boolean)
+      .map((item) => item[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "U"
+  );
+};
+
+/* =========================================================
+   GET AVATAR
+========================================================= */
+
+const getAvatarValue = (user) => {
+  if (!user) {
+    return "";
+  }
+
+  return (
+    user.avatar ||
+    user.profileImage ||
+    user.profilePicture ||
+    user.image ||
+    user.photo ||
+    user.photoURL ||
+    ""
+  );
+};
+
+/* =========================================================
+   CHECK IMAGE URL
+========================================================= */
+
+const isImageUrl = (value) => {
+  if (!value || typeof value !== "string") {
+    return false;
+  }
+
+  const trimmedValue = value.trim();
+
+  if (!trimmedValue) {
+    return false;
+  }
+
+  if (trimmedValue.startsWith("data:image/")) {
+    return true;
+  }
+
+  if (trimmedValue.startsWith("blob:")) {
+    return true;
+  }
+
+  if (
+    trimmedValue.startsWith("http://") ||
+    trimmedValue.startsWith("https://")
+  ) {
+    return true;
+  }
+
+  if (
+    /\.(jpg|jpeg|png|gif|webp|svg|avif)(\?.*)?$/i.test(
+      trimmedValue
+    )
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+/* =========================================================
+   USER AVATAR
+========================================================= */
+
+const UserAvatar = ({
+  user,
+  className = "",
+}) => {
+  const [imageError, setImageError] =
+    useState(false);
+
+  const avatarValue =
+    getAvatarValue(user);
+
+  const initials =
+    getInitials(user);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [avatarValue]);
+
+  const showImage =
+    isImageUrl(avatarValue) &&
+    !imageError;
+
+  return (
+    <div
+      className={`user-avatar-image-wrapper ${className}`}
+    >
+      {showImage ? (
+        <img
+          src={avatarValue}
+          alt={user?.name || "User"}
+          className="user-avatar-image"
+          onError={() =>
+            setImageError(true)
+          }
+        />
+      ) : (
+        <span className="user-avatar-initials">
+          {initials}
+        </span>
+      )}
+    </div>
+  );
+};
+
+/* =========================================================
+   ONLINE / OFFLINE
+========================================================= */
+
+const isUserOnline = (user) => {
+  if (!user) {
+    return false;
+  }
+
+  return Boolean(
+    user.online === true ||
+      user.isOnline === true
+  );
 };
 
 /* =========================================================
@@ -135,93 +341,308 @@ const initialMessages = {
 
 function MessageChat() {
   /* =======================================================
-     CHAT OPEN / CLOSE
+     CHAT OPEN
   ======================================================= */
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] =
+    useState(false);
 
   /* =======================================================
-     SIDEBAR DRAWER
+     USERS DRAWER
   ======================================================= */
 
-  const [showUsers, setShowUsers] = useState(true);
+  const [showUsers, setShowUsers] =
+    useState(true);
+
+  /* =======================================================
+     USERS
+  ======================================================= */
+
+  const [users, setUsers] =
+    useState([]);
+
+  const [usersLoading, setUsersLoading] =
+    useState(false);
+
+  const [usersError, setUsersError] =
+    useState("");
 
   /* =======================================================
      SELECTED USER
   ======================================================= */
 
-  const [selectedUserId, setSelectedUserId] =
-    useState("user-001");
+  const [
+    selectedUserId,
+    setSelectedUserId,
+  ] = useState(null);
 
   /* =======================================================
      SEARCH
   ======================================================= */
 
-  const [search, setSearch] = useState("");
-
-  /* =======================================================
-     MESSAGE INPUT
-  ======================================================= */
-
-  const [message, setMessage] = useState("");
+  const [search, setSearch] =
+    useState("");
 
   /* =======================================================
      MESSAGES
   ======================================================= */
 
   const [messages, setMessages] =
-    useState(initialMessages);
+    useState({});
+
+  /* =======================================================
+     MESSAGE INPUT
+  ======================================================= */
+
+  const [message, setMessage] =
+    useState("");
+
+  /* =======================================================
+     SENDING
+  ======================================================= */
+
+  const [sending, setSending] =
+    useState(false);
 
   /* =======================================================
      SELECTED USER
   ======================================================= */
 
   const selectedUser = useMemo(() => {
-    return initialUsers.find(
-      (user) => user.id === selectedUserId
+    return users.find(
+      (user) =>
+        String(
+          user._id || user.id
+        ) ===
+        String(selectedUserId)
     );
-  }, [selectedUserId]);
+  }, [
+    users,
+    selectedUserId,
+  ]);
 
   /* =======================================================
-     FILTER USERS
+     FETCH USERS
   ======================================================= */
 
-  const filteredUsers = useMemo(() => {
-    const value = search
-      .toLowerCase()
-      .trim();
+  const fetchUsers = async (
+    searchValue = ""
+  ) => {
+    try {
+      setUsersLoading(true);
+      setUsersError("");
 
-    if (!value) {
-      return initialUsers;
-    }
+      const params =
+        new URLSearchParams();
 
-    return initialUsers.filter((user) => {
-      return (
-        user.name
-          .toLowerCase()
-          .includes(value) ||
-        user.email
-          .toLowerCase()
-          .includes(value)
+      if (searchValue.trim()) {
+        params.set(
+          "search",
+          searchValue.trim()
+        );
+      }
+
+      params.set("page", "1");
+      params.set("limit", "100");
+
+      const response =
+        await fetch(
+          `${USERS_API}?${params.toString()}`,
+          {
+            method: "GET",
+            headers: getAuthHeaders(),
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message ||
+            "Failed to fetch users"
+        );
+      }
+
+      if (!data?.success) {
+        throw new Error(
+          data?.message ||
+            "Failed to fetch users"
+        );
+      }
+
+      const apiUsers =
+        Array.isArray(data.users)
+          ? data.users
+          : [];
+
+      /* =================================================
+         NORMALIZE USERS
+      ================================================= */
+
+      const normalizedUsers =
+        apiUsers.map((user) => ({
+          ...user,
+
+          id:
+            user._id ||
+            user.id,
+
+          online: Boolean(
+            user.online === true ||
+              user.isOnline === true
+          ),
+        }));
+
+      setUsers(
+        normalizedUsers
       );
-    });
+
+      /* =================================================
+         AUTO SELECT FIRST USER
+      ================================================= */
+
+      if (
+        !selectedUserId &&
+        normalizedUsers.length > 0
+      ) {
+        setSelectedUserId(
+          normalizedUsers[0]._id ||
+            normalizedUsers[0].id
+        );
+      }
+
+      /* =================================================
+         CHECK SELECTED USER
+      ================================================= */
+
+      if (
+        selectedUserId &&
+        normalizedUsers.length > 0
+      ) {
+        const selectedExists =
+          normalizedUsers.some(
+            (user) =>
+              String(
+                user._id ||
+                  user.id
+              ) ===
+              String(
+                selectedUserId
+              )
+          );
+
+        if (!selectedExists) {
+          setSelectedUserId(
+            normalizedUsers[0]._id ||
+              normalizedUsers[0].id
+          );
+        }
+      }
+
+      /* =================================================
+         NO USERS
+      ================================================= */
+
+      if (
+        normalizedUsers.length === 0
+      ) {
+        setSelectedUserId(null);
+      }
+    } catch (error) {
+      console.error(
+        "fetchUsers:",
+        error
+      );
+
+      setUsersError(
+        error.message ||
+          "Unable to load users"
+      );
+    } finally {
+      setUsersLoading(false);
+    }
+  };
+
+  /* =======================================================
+     INITIAL LOAD
+  ======================================================= */
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  /* =======================================================
+     SEARCH
+  ======================================================= */
+
+  useEffect(() => {
+    const timer =
+      setTimeout(() => {
+        fetchUsers(search);
+      }, 400);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [search]);
 
   /* =======================================================
-     OPEN CHAT FROM OUTSIDE
+     AUTO REFRESH ONLINE / OFFLINE
+  ======================================================= */
 
-     Footer:
+  useEffect(() => {
+    const interval =
+      setInterval(() => {
+        fetchUsers(search);
+      }, 30000);
 
-     window.dispatchEvent(
-       new CustomEvent("open-message-chat")
-     );
+    return () => {
+      clearInterval(interval);
+    };
+  }, [search]);
+
+  /* =======================================================
+     REFRESH WHEN TAB BECOMES ACTIVE
+  ======================================================= */
+
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (
+        document.visibilityState ===
+        "visible"
+      ) {
+        fetchUsers(search);
+      }
+    };
+
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibility
+    );
+
+    return () => {
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibility
+      );
+    };
+  }, [search]);
+
+  /* =======================================================
+     OPEN CHAT EVENT
   ======================================================= */
 
   useEffect(() => {
     const handleOpenMessage = () => {
       setIsOpen(true);
 
-      if (window.innerWidth > 768) {
+      fetchUsers(search);
+
+      if (
+        window.innerWidth >
+        768
+      ) {
         setShowUsers(true);
       }
     };
@@ -237,10 +658,10 @@ function MessageChat() {
         handleOpenMessage
       );
     };
-  }, []);
+  }, [search]);
 
   /* =======================================================
-     CLOSE CHAT FROM OUTSIDE
+     CLOSE CHAT EVENT
   ======================================================= */
 
   useEffect(() => {
@@ -265,10 +686,16 @@ function MessageChat() {
      OPEN CONVERSATION
   ======================================================= */
 
-  const openConversation = (userId) => {
+  const openConversation = (
+    userId
+  ) => {
     setSelectedUserId(userId);
+    setMessage("");
 
-    if (window.innerWidth <= 768) {
+    if (
+      window.innerWidth <=
+      768
+    ) {
       setShowUsers(false);
     }
   };
@@ -277,46 +704,109 @@ function MessageChat() {
      SEND MESSAGE
   ======================================================= */
 
-  const sendMessage = () => {
-    const text = message.trim();
+  const sendMessage = async () => {
+    const text =
+      message.trim();
 
-    if (!text || !selectedUserId) {
+    if (
+      !text ||
+      !selectedUserId ||
+      sending
+    ) {
       return;
     }
 
-    const newMessage = {
-      id: Date.now(),
+    try {
+      setSending(true);
 
-      sender: "me",
+      const now =
+        new Date();
 
-      text,
+      const newMessage = {
+        id: Date.now(),
 
-      time: new Date().toLocaleTimeString(
-        [],
-        {
-          hour: "2-digit",
-          minute: "2-digit",
-        }
-      ),
-    };
+        sender: "me",
 
-    setMessages((prev) => ({
-      ...prev,
+        text,
 
-      [selectedUserId]: [
-        ...(prev[selectedUserId] || []),
-        newMessage,
-      ],
-    }));
+        time:
+          now.toLocaleTimeString(
+            [],
+            {
+              hour: "2-digit",
+              minute: "2-digit",
+            }
+          ),
 
-    setMessage("");
+        createdAt:
+          now.toISOString(),
+      };
+
+      /* =================================================
+         ADD MESSAGE
+      ================================================= */
+
+      setMessages((prev) => ({
+        ...prev,
+
+        [selectedUserId]: [
+          ...(prev[
+            selectedUserId
+          ] || []),
+
+          newMessage,
+        ],
+      }));
+
+      /* =================================================
+         UPDATE LAST MESSAGE
+      ================================================= */
+
+      setUsers((prev) =>
+        prev.map((user) => {
+          const userId =
+            user._id ||
+            user.id;
+
+          if (
+            String(userId) !==
+            String(
+              selectedUserId
+            )
+          ) {
+            return user;
+          }
+
+          return {
+            ...user,
+
+            lastMessage:
+              text,
+
+            lastMessageAt:
+              now.toISOString(),
+          };
+        })
+      );
+
+      setMessage("");
+    } catch (error) {
+      console.error(
+        "sendMessage:",
+        error
+      );
+    } finally {
+      setSending(false);
+    }
   };
 
   /* =======================================================
-     ENTER TO SEND
+     ENTER SEND
   ======================================================= */
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (
+    event
+  ) => {
     if (
       event.key === "Enter" &&
       !event.shiftKey
@@ -328,15 +818,17 @@ function MessageChat() {
   };
 
   /* =======================================================
-     TOGGLE SIDEBAR
+     TOGGLE DRAWER
   ======================================================= */
 
   const toggleDrawer = () => {
-    setShowUsers((prev) => !prev);
+    setShowUsers(
+      (prev) => !prev
+    );
   };
 
   /* =======================================================
-     CLOSE CHAT
+     CLOSE
   ======================================================= */
 
   const closeChat = () => {
@@ -366,10 +858,6 @@ function MessageChat() {
               opacity: 0,
             }}
           >
-            {/* =================================================
-                CHAT WINDOW
-            ================================================= */}
-
             <motion.div
               className="message-chat-window"
 
@@ -397,14 +885,11 @@ function MessageChat() {
               }}
             >
               {/* =================================================
-                  TOP HEADER
+                  HEADER
               ================================================= */}
 
               <div className="message-chat-header">
-
                 <div className="message-header-left">
-
-                  {/* Drawer Toggle */}
 
                   <button
                     className={`message-drawer-toggle ${
@@ -412,74 +897,56 @@ function MessageChat() {
                         ? "drawer-active"
                         : ""
                     }`}
-
-                    onClick={toggleDrawer}
-
-                    aria-label={
-                      showUsers
-                        ? "Close conversations"
-                        : "Open conversations"
+                    onClick={
+                      toggleDrawer
                     }
-
-                    title={
-                      showUsers
-                        ? "Close conversations"
-                        : "Open conversations"
-                    }
+                    aria-label="Toggle users"
                   >
-                    <PanelLeft size={19} />
+                    <PanelLeft
+                      size={19}
+                    />
                   </button>
 
-                  {/* Chat Icon */}
-
                   <div className="message-header-icon">
-                    <MessageCircle size={19} />
+                    <MessageCircle
+                      size={19}
+                    />
                   </div>
 
-                  {/* Header Content */}
-
                   <div className="message-header-content">
-
                     <h3>
                       Messages
                     </h3>
 
                     <span>
-                      {initialUsers.length} conversations
+                      {users.length} users
                     </span>
-
                   </div>
-
                 </div>
-
-                {/* Close Button */}
 
                 <div className="message-header-actions">
 
                   <button
                     className="message-icon-button"
-
-                    onClick={closeChat}
-
-                    aria-label="Close messages"
-
-                    title="Close"
+                    onClick={
+                      closeChat
+                    }
+                    aria-label="Close"
                   >
                     <X size={19} />
                   </button>
 
                 </div>
-
               </div>
 
               {/* =================================================
-                  MAIN BODY
+                  BODY
               ================================================= */}
 
               <div className="message-chat-body">
 
                 {/* =================================================
-                    SIDEBAR
+                    USERS SIDEBAR
                 ================================================= */}
 
                 <AnimatePresence
@@ -512,125 +979,260 @@ function MessageChat() {
                         ease: "easeInOut",
                       }}
                     >
+
                       {/* SEARCH */}
 
                       <div className="message-search">
 
-                        <Search size={17} />
+                        <Search
+                          size={17}
+                        />
 
                         <input
                           type="text"
-                          placeholder="Search conversations..."
-                          value={search}
-
-                          onChange={(event) =>
+                          placeholder="Search users..."
+                          value={
+                            search
+                          }
+                          onChange={(
+                            event
+                          ) =>
                             setSearch(
-                              event.target.value
+                              event.target
+                                .value
                             )
                           }
                         />
+
+                        {usersLoading && (
+                          <Loader2
+                            size={16}
+                            className="message-search-loader"
+                          />
+                        )}
 
                       </div>
 
                       {/* LABEL */}
 
                       <div className="conversation-label">
-                        Recent Conversations
+                        All Users
                       </div>
 
-                      {/* USERS */}
+                      {/* USER LIST */}
 
                       <div className="message-users-list">
 
-                        {filteredUsers.map(
-                          (user) => (
-                            <button
-                              key={user.id}
+                        {/* LOADING */}
 
-                              className={`message-user-item ${
-                                selectedUserId ===
-                                user.id
-                                  ? "active"
-                                  : ""
-                              }`}
+                        {usersLoading &&
+                          users.length ===
+                            0 && (
+                            <div className="no-users">
 
-                              onClick={() =>
-                                openConversation(
-                                  user.id
-                                )
-                              }
-                            >
-                              {/* Avatar */}
+                              <Loader2
+                                size={30}
+                                className="message-loading-icon"
+                              />
 
-                              <div className="message-user-avatar-wrapper">
+                              <p>
+                                Loading users...
+                              </p>
 
-                                <div className="message-user-avatar">
-                                  {user.avatar}
-                                </div>
+                            </div>
+                          )}
 
-                                {user.online && (
-                                  <span className="online-dot" />
-                                )}
+                        {/* ERROR */}
 
-                              </div>
+                        {!usersLoading &&
+                          usersError && (
+                            <div className="no-users">
 
-                              {/* User Info */}
+                              <UserRound
+                                size={32}
+                              />
 
-                              <div className="message-user-info">
+                              <p>
+                                {usersError}
+                              </p>
 
-                                <div className="message-user-top">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  fetchUsers(
+                                    search
+                                  )
+                                }
+                                className="retry-users-button"
+                              >
+                                <RefreshCw
+                                  size={14}
+                                />
 
-                                  <strong>
-                                    {user.name}
-                                  </strong>
+                                Retry
+                              </button>
 
-                                  <span>
-                                    {user.time}
-                                  </span>
+                            </div>
+                          )}
 
-                                </div>
+                        {/* USERS */}
 
-                                <div className="message-user-bottom">
+                        {!usersError &&
+                          users.map(
+                            (user) => {
+                              const userId =
+                                user._id ||
+                                user.id;
 
-                                  <p>
-                                    {
-                                      user.lastMessage
-                                    }
-                                  </p>
+                              const isSelected =
+                                String(
+                                  selectedUserId
+                                ) ===
+                                String(
+                                  userId
+                                );
 
-                                  {user.unread >
-                                    0 && (
-                                    <span className="unread-count">
-                                      {
-                                        user.unread
+                              const online =
+                                isUserOnline(
+                                  user
+                                );
+
+                              const sidebarDate =
+                                formatSidebarDateTime(
+                                  user.lastMessageAt
+                                );
+
+                              return (
+                                <button
+                                  key={
+                                    userId
+                                  }
+                                  className={`message-user-item ${
+                                    isSelected
+                                      ? "active"
+                                      : ""
+                                  }`}
+                                  onClick={() =>
+                                    openConversation(
+                                      userId
+                                    )
+                                  }
+                                >
+
+                                  {/* =================================
+                                      AVATAR
+                                  ================================= */}
+
+                                  <div className="message-user-avatar-wrapper">
+
+                                    <UserAvatar
+                                      user={
+                                        user
                                       }
-                                    </span>
-                                  )}
+                                      className="message-user-avatar"
+                                    />
 
-                                </div>
+                                    {/* ONLINE / OFFLINE */}
 
-                              </div>
+                                    <span
+                                      className={`online-status-dot ${
+                                        online
+                                          ? "online"
+                                          : "offline"
+                                      }`}
+                                      title={
+                                        online
+                                          ? "Online"
+                                          : "Offline"
+                                      }
+                                    />
 
-                            </button>
-                          )
-                        )}
+                                  </div>
+
+                                  {/* =================================
+                                      USER INFO
+                                  ================================= */}
+
+                                  <div className="message-user-info">
+
+                                    {/* NAME + DATE/TIME */}
+
+                                    <div className="message-user-top">
+
+                                      <strong>
+                                        {
+                                          user.name
+                                        }
+                                      </strong>
+
+                                      {sidebarDate && (
+                                        <span
+                                          className="message-user-time"
+                                          title={
+                                            user.lastMessageAt
+                                              ? new Date(
+                                                  user.lastMessageAt
+                                                ).toLocaleString()
+                                              : ""
+                                          }
+                                        >
+                                          {
+                                            sidebarDate
+                                          }
+                                        </span>
+                                      )}
+
+                                    </div>
+
+                                    {/* MESSAGE */}
+
+                                    <div className="message-user-bottom">
+
+                                      <p>
+                                        {
+                                          user.lastMessage
+                                        }
+
+                                        {!user.lastMessage &&
+                                          user.email}
+                                      </p>
+
+                                      {user.unread >
+                                        0 && (
+                                        <span className="unread-count">
+                                          {
+                                            user.unread
+                                          }
+                                        </span>
+                                      )}
+
+                                    </div>
+
+                                  </div>
+
+                                </button>
+                              );
+                            }
+                          )}
 
                         {/* NO USERS */}
 
-                        {filteredUsers.length ===
-                          0 && (
-                          <div className="no-users">
+                        {!usersLoading &&
+                          !usersError &&
+                          users.length ===
+                            0 && (
+                            <div className="no-users">
 
-                            <UserRound
-                              size={32}
-                            />
+                              <UserRound
+                                size={32}
+                              />
 
-                            <p>
-                              No users found
-                            </p>
+                              <p>
+                                No users found
+                              </p>
 
-                          </div>
-                        )}
+                            </div>
+                          )}
 
                       </div>
 
@@ -639,7 +1241,7 @@ function MessageChat() {
                 </AnimatePresence>
 
                 {/* =================================================
-                    ONE TO ONE CONVERSATION
+                    CONVERSATION
                 ================================================= */}
 
                 <section className="message-conversation">
@@ -648,22 +1250,29 @@ function MessageChat() {
                       CONVERSATION HEADER
                   ================================================= */}
 
-                  {selectedUser && (
+                  {selectedUser ? (
                     <div className="conversation-header">
 
                       <div className="conversation-user">
 
                         <div className="conversation-avatar-wrapper">
 
-                          <div className="conversation-avatar">
-                            {
-                              selectedUser.avatar
+                          <UserAvatar
+                            user={
+                              selectedUser
                             }
-                          </div>
+                            className="conversation-avatar"
+                          />
 
-                          {selectedUser.online && (
-                            <span className="conversation-online" />
-                          )}
+                          <span
+                            className={`conversation-status-dot ${
+                              isUserOnline(
+                                selectedUser
+                              )
+                                ? "online"
+                                : "offline"
+                            }`}
+                          />
 
                         </div>
 
@@ -677,12 +1286,16 @@ function MessageChat() {
 
                           <span
                             className={
-                              selectedUser.online
+                              isUserOnline(
+                                selectedUser
+                              )
                                 ? "status-online"
                                 : "status-offline"
                             }
                           >
-                            {selectedUser.online
+                            {isUserOnline(
+                              selectedUser
+                            )
                               ? "Online"
                               : "Offline"}
                           </span>
@@ -691,35 +1304,64 @@ function MessageChat() {
 
                       </div>
 
-                      {/* Actions */}
-
                       <div className="conversation-actions">
 
                         <button
                           type="button"
                           title="Call"
-                          aria-label="Call"
                         >
-                          <Phone size={17} />
+                          <Phone
+                            size={17}
+                          />
                         </button>
 
                         <button
                           type="button"
                           title="Video call"
-                          aria-label="Video call"
                         >
-                          <Video size={18} />
+                          <Video
+                            size={18}
+                          />
                         </button>
 
                         <button
                           type="button"
                           title="More"
-                          aria-label="More"
                         >
                           <MoreVertical
                             size={18}
                           />
                         </button>
+
+                      </div>
+
+                    </div>
+                  ) : (
+                    <div className="conversation-header">
+
+                      <div className="conversation-user">
+
+                        <div className="conversation-avatar-wrapper">
+
+                          <div className="conversation-avatar empty-avatar">
+                            <UserRound
+                              size={20}
+                            />
+                          </div>
+
+                        </div>
+
+                        <div className="conversation-user-details">
+
+                          <h4>
+                            Select a user
+                          </h4>
+
+                          <span>
+                            Choose a conversation
+                          </span>
+
+                        </div>
 
                       </div>
 
@@ -732,88 +1374,145 @@ function MessageChat() {
 
                   <div className="messages-container">
 
-                    <div className="chat-date">
-                      <span>
-                        Today
-                      </span>
-                    </div>
+                    {!selectedUser && (
+                      <div className="no-conversation">
 
-                    {(messages[
-                      selectedUserId
-                    ] || []).map((item) => {
+                        <MessageCircle
+                          size={42}
+                        />
 
-                      const isMine =
-                        item.sender === "me";
+                        <h4>
+                          No conversation selected
+                        </h4>
 
-                      return (
-                        <motion.div
-                          key={item.id}
+                        <p>
+                          Select a user from the sidebar to start chatting.
+                        </p>
 
-                          className={`message-row ${
-                            isMine
-                              ? "message-row-mine"
-                              : "message-row-user"
-                          }`}
+                      </div>
+                    )}
 
-                          initial={{
-                            opacity: 0,
-                            y: 8,
-                          }}
+                    {selectedUser && (
+                      <>
+                        {/* DATE */}
 
-                          animate={{
-                            opacity: 1,
-                            y: 0,
-                          }}
+                        <div className="chat-date">
+                          <span>
+                            Today
+                          </span>
+                        </div>
 
-                          transition={{
-                            duration: 0.2,
-                          }}
-                        >
-                          {!isMine &&
-                            selectedUser && (
-                              <div className="small-avatar">
-                                {
-                                  selectedUser.avatar
+                        {/* MESSAGES */}
+
+                        {(
+                          messages[
+                            selectedUserId
+                          ] || []
+                        ).map(
+                          (item) => {
+
+                            const isMine =
+                              item.sender ===
+                              "me";
+
+                            return (
+                              <motion.div
+                                key={
+                                  item.id
                                 }
-                              </div>
-                            )}
+                                className={`message-row ${
+                                  isMine
+                                    ? "message-row-mine"
+                                    : "message-row-user"
+                                }`}
+                                initial={{
+                                  opacity: 0,
+                                  y: 8,
+                                }}
+                                animate={{
+                                  opacity: 1,
+                                  y: 0,
+                                }}
+                              >
 
-                          <div
-                            className={`message-bubble ${
-                              isMine
-                                ? "message-mine"
-                                : "message-user"
-                            }`}
-                          >
+                                {!isMine && (
+                                  <UserAvatar
+                                    user={
+                                      selectedUser
+                                    }
+                                    className="small-avatar"
+                                  />
+                                )}
+
+                                <div
+                                  className={`message-bubble ${
+                                    isMine
+                                      ? "message-mine"
+                                      : "message-user"
+                                  }`}
+                                >
+
+                                  <p>
+                                    {
+                                      item.text
+                                    }
+                                  </p>
+
+                                  <div className="message-meta">
+
+                                    <span>
+                                      {formatDateTime(
+                                        item.createdAt
+                                      )}
+                                    </span>
+
+                                    {isMine && (
+                                      <CheckCheck
+                                        size={14}
+                                      />
+                                    )}
+
+                                  </div>
+
+                                </div>
+
+                              </motion.div>
+                            );
+                          }
+                        )}
+
+                        {/* EMPTY */}
+
+                        {(
+                          messages[
+                            selectedUserId
+                          ] || []
+                        ).length ===
+                          0 && (
+                          <div className="empty-messages">
+
+                            <MessageCircle
+                              size={35}
+                            />
 
                             <p>
-                              {item.text}
+                              No messages yet
                             </p>
 
-                            <div className="message-meta">
-
-                              <span>
-                                {item.time}
-                              </span>
-
-                              {isMine && (
-                                <CheckCheck
-                                  size={14}
-                                />
-                              )}
-
-                            </div>
+                            <span>
+                              Start the conversation
+                            </span>
 
                           </div>
+                        )}
 
-                        </motion.div>
-                      );
-                    })}
+                      </>
+                    )}
 
                   </div>
 
                   {/* =================================================
-                      MESSAGE INPUT
+                      INPUT
                   ================================================= */}
 
                   <div className="message-input-area">
@@ -821,45 +1520,62 @@ function MessageChat() {
                     <div className="message-input-wrapper">
 
                       <textarea
-                        value={message}
-
-                        onChange={(event) =>
+                        value={
+                          message
+                        }
+                        onChange={(
+                          event
+                        ) =>
                           setMessage(
-                            event.target.value
+                            event.target
+                              .value
                           )
                         }
-
                         onKeyDown={
                           handleKeyDown
                         }
-
-                        placeholder="Write a message..."
-
+                        placeholder={
+                          selectedUser
+                            ? "Write a message..."
+                            : "Select a user first..."
+                        }
                         rows={1}
+                        disabled={
+                          !selectedUser ||
+                          sending
+                        }
                       />
 
                       <motion.button
                         type="button"
-
                         className="send-message-button"
-
-                        onClick={sendMessage}
-
-                        disabled={
-                          !message.trim()
+                        onClick={
+                          sendMessage
                         }
-
+                        disabled={
+                          !message.trim() ||
+                          !selectedUser ||
+                          sending
+                        }
                         whileHover={{
                           scale: 1.04,
                         }}
-
                         whileTap={{
                           scale: 0.94,
                         }}
-
-                        aria-label="Send message"
                       >
-                        <Send size={17} />
+
+                        {sending ? (
+                          <Loader2
+                            size={17}
+                            className="message-send-loader"
+                          />
+                        ) : (
+                          <Send
+                            size={17}
+                          />
+                        )}
+
                       </motion.button>
 
                     </div>
@@ -883,3 +1599,5 @@ function MessageChat() {
 }
 
 export default MessageChat;
+
+
