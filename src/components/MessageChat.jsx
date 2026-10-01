@@ -1,6 +1,4 @@
-
 import { useEffect, useMemo, useState } from "react";
-
 import { AnimatePresence, motion } from "framer-motion";
 
 import {
@@ -28,6 +26,7 @@ const API_URL =
   import.meta.env.VITE_API_URL?.replace(/\/$/, "");
 
 const USERS_API = `${API_URL}/auth`;
+const MESSAGES_API = `${API_URL}/message`;
 
 /* =========================================================
    TOKEN HELPER
@@ -336,6 +335,58 @@ const isUserOnline = (user) => {
 };
 
 /* =========================================================
+   MESSAGE NORMALIZER
+========================================================= */
+
+const normalizeMessage = (item) => {
+  if (!item) {
+    return null;
+  }
+
+  const messageId =
+    item._id ||
+    item.id ||
+    `message-${Date.now()}-${Math.random()}`;
+
+  const sender =
+    item.senderId;
+
+  const receiver =
+    item.receiverId;
+
+  const senderId =
+    typeof sender === "object"
+      ? sender?._id
+      : sender;
+
+  const receiverId =
+    typeof receiver === "object"
+      ? receiver?._id
+      : receiver;
+
+  return {
+    ...item,
+
+    id: messageId,
+
+    _id: item._id,
+
+    senderId,
+
+    receiverId,
+
+    text: item.text || "",
+
+    createdAt:
+      item.createdAt ||
+      item.updatedAt ||
+      new Date().toISOString(),
+
+    read: Boolean(item.read),
+  };
+};
+
+/* =========================================================
    COMPONENT
 ========================================================= */
 
@@ -385,10 +436,28 @@ function MessageChat() {
 
   /* =======================================================
      MESSAGES
+
+     {
+       userId: [messages]
+     }
   ======================================================= */
 
   const [messages, setMessages] =
     useState({});
+
+  /* =======================================================
+     MESSAGE LOADING
+  ======================================================= */
+
+  const [messagesLoading, setMessagesLoading] =
+    useState(false);
+
+  /* =======================================================
+     MESSAGE ERROR
+  ======================================================= */
+
+  const [messagesError, setMessagesError] =
+    useState("");
 
   /* =======================================================
      MESSAGE INPUT
@@ -425,29 +494,155 @@ function MessageChat() {
      FETCH USERS
   ======================================================= */
 
-  const fetchUsers = async (
-    searchValue = ""
-  ) => {
+const fetchUsers = async (searchValue = "") => {
+  // Prevent duplicate API calls
+  if (usersLoading) {
+    return;
+  }
+
+  try {
+    setUsersLoading(true);
+    setUsersError("");
+
+    const params = new URLSearchParams();
+
+    const trimmedSearch = searchValue.trim();
+
+    if (trimmedSearch) {
+      params.set("search", trimmedSearch);
+    }
+
+    params.set("page", "1");
+    params.set("limit", "100");
+
+    const response = await fetch(
+      `${USERS_API}?${params.toString()}`,
+      {
+        method: "GET",
+        headers: getAuthHeaders(),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data?.success) {
+      throw new Error(
+        data?.message || "Failed to fetch users"
+      );
+    }
+
+    const apiUsers = Array.isArray(data.users)
+      ? data.users
+      : [];
+
+    /* ================================================
+       NORMALIZE USERS
+    ================================================ */
+
+    const normalizedUsers = apiUsers.map((user) => ({
+      ...user,
+
+      id: user._id || user.id,
+
+      online: Boolean(
+        user.online === true ||
+        user.isOnline === true
+      ),
+    }));
+
+    setUsers(normalizedUsers);
+
+    /* ================================================
+       SELECT USER
+    ================================================ */
+
+    const currentSelectedId = selectedUserId;
+
+    if (
+      !currentSelectedId &&
+      normalizedUsers.length > 0
+    ) {
+      const firstUser =
+        normalizedUsers[0]._id ||
+        normalizedUsers[0].id;
+
+      setSelectedUserId(firstUser);
+    }
+
+    /* ================================================
+       CHECK SELECTED USER
+    ================================================ */
+
+    if (
+      currentSelectedId &&
+      normalizedUsers.length > 0
+    ) {
+      const selectedExists =
+        normalizedUsers.some(
+          (user) =>
+            String(user._id || user.id) ===
+            String(currentSelectedId)
+        );
+
+      if (!selectedExists) {
+        const firstUser =
+          normalizedUsers[0]._id ||
+          normalizedUsers[0].id;
+
+        setSelectedUserId(firstUser);
+      }
+    }
+
+    /* ================================================
+       NO USERS
+    ================================================ */
+
+    if (normalizedUsers.length === 0) {
+      setSelectedUserId(null);
+    }
+  } catch (error) {
+    console.error("fetchUsers:", error);
+
+    setUsersError(
+      error?.message ||
+        "Unable to load users"
+    );
+  } finally {
+    setUsersLoading(false);
+  }
+};
+
+  /* =======================================================
+     FETCH MESSAGES
+
+     GET /message/:userId
+  ======================================================= */
+
+  const fetchMessages = async (userId) => {
+    if (!userId) {
+      return;
+    }
+
     try {
-      setUsersLoading(true);
-      setUsersError("");
+      setMessagesLoading(true);
+      setMessagesError("");
 
-      const params =
-        new URLSearchParams();
+      const token = getToken();
 
-      if (searchValue.trim()) {
-        params.set(
-          "search",
-          searchValue.trim()
+      if (!token) {
+        throw new Error(
+          "Authentication token not found. Please login again."
         );
       }
 
-      params.set("page", "1");
-      params.set("limit", "100");
+      console.log(
+        "GET MESSAGES:",
+        `${MESSAGES_API}/${userId}`
+      );
 
       const response =
         await fetch(
-          `${USERS_API}?${params.toString()}`,
+          `${MESSAGES_API}/${userId}`,
           {
             method: "GET",
             headers: getAuthHeaders(),
@@ -457,110 +652,166 @@ function MessageChat() {
       const data =
         await response.json();
 
+      console.log(
+        "GET MESSAGES RESPONSE:",
+        data
+      );
+
       if (!response.ok) {
         throw new Error(
           data?.message ||
-            "Failed to fetch users"
+            "Failed to fetch messages"
         );
       }
 
       if (!data?.success) {
         throw new Error(
           data?.message ||
-            "Failed to fetch users"
+            "Failed to fetch messages"
         );
       }
 
-      const apiUsers =
-        Array.isArray(data.users)
-          ? data.users
+      const apiMessages =
+        Array.isArray(data.messages)
+          ? data.messages
           : [];
 
-      /* =================================================
-         NORMALIZE USERS
-      ================================================= */
+      /* ================================================
+         NORMALIZE MESSAGES
+      ================================================ */
 
-      const normalizedUsers =
-        apiUsers.map((user) => ({
-          ...user,
+      const normalizedMessages =
+        apiMessages
+          .map(normalizeMessage)
+          .filter(Boolean);
 
-          id:
-            user._id ||
-            user.id,
+      /* ================================================
+         SAVE MESSAGES BY USER ID
+      ================================================ */
 
-          online: Boolean(
-            user.online === true ||
-              user.isOnline === true
-          ),
-        }));
+      setMessages((prev) => ({
+        ...prev,
 
-      setUsers(
-        normalizedUsers
-      );
+        [userId]:
+          normalizedMessages,
+      }));
 
-      /* =================================================
-         AUTO SELECT FIRST USER
-      ================================================= */
+      /* ================================================
+         UPDATE SIDEBAR LAST MESSAGE
+      ================================================ */
 
-      if (
-        !selectedUserId &&
-        normalizedUsers.length > 0
-      ) {
-        setSelectedUserId(
-          normalizedUsers[0]._id ||
-            normalizedUsers[0].id
+      const lastMessage =
+        normalizedMessages[
+          normalizedMessages.length - 1
+        ];
+
+      if (lastMessage) {
+        setUsers((prev) =>
+          prev.map((user) => {
+            const currentUserId =
+              user._id || user.id;
+
+            if (
+              String(currentUserId) !==
+              String(userId)
+            ) {
+              return user;
+            }
+
+            return {
+              ...user,
+
+              lastMessage:
+                lastMessage.text,
+
+              lastMessageAt:
+                lastMessage.createdAt,
+            };
+          })
         );
-      }
-
-      /* =================================================
-         CHECK SELECTED USER
-      ================================================= */
-
-      if (
-        selectedUserId &&
-        normalizedUsers.length > 0
-      ) {
-        const selectedExists =
-          normalizedUsers.some(
-            (user) =>
-              String(
-                user._id ||
-                  user.id
-              ) ===
-              String(
-                selectedUserId
-              )
-          );
-
-        if (!selectedExists) {
-          setSelectedUserId(
-            normalizedUsers[0]._id ||
-              normalizedUsers[0].id
-          );
-        }
-      }
-
-      /* =================================================
-         NO USERS
-      ================================================= */
-
-      if (
-        normalizedUsers.length === 0
-      ) {
-        setSelectedUserId(null);
       }
     } catch (error) {
       console.error(
-        "fetchUsers:",
+        "fetchMessages:",
         error
       );
 
-      setUsersError(
+      setMessagesError(
         error.message ||
-          "Unable to load users"
+          "Unable to load messages"
       );
+
+      setMessages((prev) => ({
+        ...prev,
+        [userId]: [],
+      }));
     } finally {
-      setUsersLoading(false);
+      setMessagesLoading(false);
+    }
+  };
+
+  /* =======================================================
+     MARK MESSAGES AS READ
+
+     PATCH /message/:userId/read
+  ======================================================= */
+
+  const markMessagesRead = async (
+    userId
+  ) => {
+    if (!userId) {
+      return;
+    }
+
+    try {
+      const response =
+        await fetch(
+          `${MESSAGES_API}/${userId}/read`,
+          {
+            method: "PATCH",
+            headers: getAuthHeaders(),
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        console.warn(
+          "markMessagesRead:",
+          data?.message
+        );
+
+        return;
+      }
+
+      /* ================================================
+         CLEAR LOCAL UNREAD COUNT
+      ================================================ */
+
+      setUsers((prev) =>
+        prev.map((user) => {
+          const currentUserId =
+            user._id || user.id;
+
+          if (
+            String(currentUserId) !==
+            String(userId)
+          ) {
+            return user;
+          }
+
+          return {
+            ...user,
+            unread: 0,
+          };
+        })
+      );
+    } catch (error) {
+      console.error(
+        "markMessagesRead:",
+        error
+      );
     }
   };
 
@@ -579,7 +830,7 @@ function MessageChat() {
   useEffect(() => {
     const timer =
       setTimeout(() => {
-        fetchUsers(search);
+        // fetchUsers(search);
       }, 400);
 
     return () => {
@@ -588,13 +839,13 @@ function MessageChat() {
   }, [search]);
 
   /* =======================================================
-     AUTO REFRESH ONLINE / OFFLINE
+     AUTO REFRESH USERS
   ======================================================= */
 
   useEffect(() => {
     const interval =
       setInterval(() => {
-        fetchUsers(search);
+        // fetchUsers(search);
       }, 30000);
 
     return () => {
@@ -603,7 +854,7 @@ function MessageChat() {
   }, [search]);
 
   /* =======================================================
-     REFRESH WHEN TAB BECOMES ACTIVE
+     REFRESH WHEN TAB ACTIVE
   ======================================================= */
 
   useEffect(() => {
@@ -612,7 +863,13 @@ function MessageChat() {
         document.visibilityState ===
         "visible"
       ) {
-        fetchUsers(search);
+        // fetchUsers(search);
+
+        if (selectedUserId) {
+          fetchMessages(
+            selectedUserId
+          );
+        }
       }
     };
 
@@ -627,17 +884,20 @@ function MessageChat() {
         handleVisibility
       );
     };
-  }, [search]);
+  }, [
+    search,
+    selectedUserId,
+  ]);
 
   /* =======================================================
-     OPEN CHAT EVENT
+     OPEN MESSAGE CHAT EVENT
   ======================================================= */
 
   useEffect(() => {
     const handleOpenMessage = () => {
       setIsOpen(true);
 
-      fetchUsers(search);
+      // fetchUsers(search);
 
       if (
         window.innerWidth >
@@ -661,7 +921,7 @@ function MessageChat() {
   }, [search]);
 
   /* =======================================================
-     CLOSE CHAT EVENT
+     CLOSE MESSAGE CHAT EVENT
   ======================================================= */
 
   useEffect(() => {
@@ -683,6 +943,26 @@ function MessageChat() {
   }, []);
 
   /* =======================================================
+     LOAD MESSAGES WHEN USER CHANGES
+
+     GET /message/:userId
+  ======================================================= */
+
+  useEffect(() => {
+    if (!selectedUserId) {
+      return;
+    }
+
+    fetchMessages(
+      selectedUserId
+    );
+
+    markMessagesRead(
+      selectedUserId
+    );
+  }, [selectedUserId]);
+
+  /* =======================================================
      OPEN CONVERSATION
   ======================================================= */
 
@@ -690,7 +970,10 @@ function MessageChat() {
     userId
   ) => {
     setSelectedUserId(userId);
+
     setMessage("");
+
+    setMessagesError("");
 
     if (
       window.innerWidth <=
@@ -702,6 +985,8 @@ function MessageChat() {
 
   /* =======================================================
      SEND MESSAGE
+
+     POST /message
   ======================================================= */
 
   const sendMessage = async () => {
@@ -719,32 +1004,63 @@ function MessageChat() {
     try {
       setSending(true);
 
-      const now =
-        new Date();
+      const response =
+        await fetch(
+          MESSAGES_API,
+          {
+            method: "POST",
+            headers:
+              getAuthHeaders(),
 
-      const newMessage = {
-        id: Date.now(),
+            body: JSON.stringify({
+              receiverId:
+                selectedUserId,
 
-        sender: "me",
+              text,
+            }),
+          }
+        );
 
-        text,
+      const data =
+        await response.json();
 
-        time:
-          now.toLocaleTimeString(
-            [],
-            {
-              hour: "2-digit",
-              minute: "2-digit",
-            }
-          ),
+      console.log(
+        "SEND MESSAGE RESPONSE:",
+        data
+      );
 
-        createdAt:
-          now.toISOString(),
-      };
+      if (!response.ok) {
+        throw new Error(
+          data?.message ||
+            "Failed to send message"
+        );
+      }
 
-      /* =================================================
-         ADD MESSAGE
-      ================================================= */
+      if (!data?.success) {
+        throw new Error(
+          data?.message ||
+            "Failed to send message"
+        );
+      }
+
+      /* ================================================
+         SERVER MESSAGE
+      ================================================ */
+
+      const serverMessage =
+        normalizeMessage(
+          data.message
+        );
+
+      if (!serverMessage) {
+        throw new Error(
+          "Server did not return a valid message"
+        );
+      }
+
+      /* ================================================
+         ADD SERVER MESSAGE
+      ================================================ */
 
       setMessages((prev) => ({
         ...prev,
@@ -754,13 +1070,13 @@ function MessageChat() {
             selectedUserId
           ] || []),
 
-          newMessage,
+          serverMessage,
         ],
       }));
 
-      /* =================================================
+      /* ================================================
          UPDATE LAST MESSAGE
-      ================================================= */
+      ================================================ */
 
       setUsers((prev) =>
         prev.map((user) => {
@@ -781,19 +1097,30 @@ function MessageChat() {
             ...user,
 
             lastMessage:
-              text,
+              serverMessage.text,
 
             lastMessageAt:
-              now.toISOString(),
+              serverMessage.createdAt,
+
+            unread: 0,
           };
         })
       );
+
+      /* ================================================
+         CLEAR INPUT
+      ================================================ */
 
       setMessage("");
     } catch (error) {
       console.error(
         "sendMessage:",
         error
+      );
+
+      alert(
+        error.message ||
+          "Failed to send message"
       );
     } finally {
       setSending(false);
@@ -836,6 +1163,17 @@ function MessageChat() {
   };
 
   /* =======================================================
+     CURRENT MESSAGES
+  ======================================================= */
+
+  const currentMessages =
+    selectedUserId
+      ? messages[
+          selectedUserId
+        ] || []
+      : [];
+
+  /* =======================================================
      RENDER
   ======================================================= */
 
@@ -845,40 +1183,33 @@ function MessageChat() {
         {isOpen && (
           <motion.div
             className="message-chat-overlay"
-
             initial={{
               opacity: 0,
             }}
-
             animate={{
               opacity: 1,
             }}
-
             exit={{
               opacity: 0,
             }}
           >
             <motion.div
               className="message-chat-window"
-
               initial={{
                 opacity: 0,
                 y: 35,
                 scale: 0.96,
               }}
-
               animate={{
                 opacity: 1,
                 y: 0,
                 scale: 1,
               }}
-
               exit={{
                 opacity: 0,
                 y: 35,
                 scale: 0.96,
               }}
-
               transition={{
                 duration: 0.25,
                 ease: "easeOut",
@@ -890,7 +1221,6 @@ function MessageChat() {
 
               <div className="message-chat-header">
                 <div className="message-header-left">
-
                   <button
                     className={`message-drawer-toggle ${
                       showUsers
@@ -919,13 +1249,13 @@ function MessageChat() {
                     </h3>
 
                     <span>
-                      {users.length} users
+                      {users.length}{" "}
+                      users
                     </span>
                   </div>
                 </div>
 
                 <div className="message-header-actions">
-
                   <button
                     className="message-icon-button"
                     onClick={
@@ -935,7 +1265,6 @@ function MessageChat() {
                   >
                     <X size={19} />
                   </button>
-
                 </div>
               </div>
 
@@ -944,7 +1273,6 @@ function MessageChat() {
               ================================================= */}
 
               <div className="message-chat-body">
-
                 {/* =================================================
                     USERS SIDEBAR
                 ================================================= */}
@@ -955,35 +1283,29 @@ function MessageChat() {
                   {showUsers && (
                     <motion.aside
                       className="message-users-sidebar"
-
                       initial={{
                         width: 0,
                         minWidth: 0,
                         opacity: 0,
                       }}
-
                       animate={{
                         width: 335,
                         minWidth: 335,
                         opacity: 1,
                       }}
-
                       exit={{
                         width: 0,
                         minWidth: 0,
                         opacity: 0,
                       }}
-
                       transition={{
                         duration: 0.25,
                         ease: "easeInOut",
                       }}
                     >
-
                       {/* SEARCH */}
 
                       <div className="message-search">
-
                         <Search
                           size={17}
                         />
@@ -998,7 +1320,8 @@ function MessageChat() {
                             event
                           ) =>
                             setSearch(
-                              event.target
+                              event
+                                .target
                                 .value
                             )
                           }
@@ -1010,7 +1333,6 @@ function MessageChat() {
                             className="message-search-loader"
                           />
                         )}
-
                       </div>
 
                       {/* LABEL */}
@@ -1022,23 +1344,23 @@ function MessageChat() {
                       {/* USER LIST */}
 
                       <div className="message-users-list">
-
                         {/* LOADING */}
 
                         {usersLoading &&
                           users.length ===
                             0 && (
                             <div className="no-users">
-
                               <Loader2
-                                size={30}
+                                size={
+                                  30
+                                }
                                 className="message-loading-icon"
                               />
 
                               <p>
-                                Loading users...
+                                Loading
+                                users...
                               </p>
-
                             </div>
                           )}
 
@@ -1047,13 +1369,16 @@ function MessageChat() {
                         {!usersLoading &&
                           usersError && (
                             <div className="no-users">
-
                               <UserRound
-                                size={32}
+                                size={
+                                  32
+                                }
                               />
 
                               <p>
-                                {usersError}
+                                {
+                                  usersError
+                                }
                               </p>
 
                               <button
@@ -1066,12 +1391,13 @@ function MessageChat() {
                                 className="retry-users-button"
                               >
                                 <RefreshCw
-                                  size={14}
+                                  size={
+                                    14
+                                  }
                                 />
 
                                 Retry
                               </button>
-
                             </div>
                           )}
 
@@ -1118,21 +1444,15 @@ function MessageChat() {
                                     )
                                   }
                                 >
-
-                                  {/* =================================
-                                      AVATAR
-                                  ================================= */}
+                                  {/* AVATAR */}
 
                                   <div className="message-user-avatar-wrapper">
-
                                     <UserAvatar
                                       user={
                                         user
                                       }
                                       className="message-user-avatar"
                                     />
-
-                                    {/* ONLINE / OFFLINE */}
 
                                     <span
                                       className={`online-status-dot ${
@@ -1146,19 +1466,12 @@ function MessageChat() {
                                           : "Offline"
                                       }
                                     />
-
                                   </div>
 
-                                  {/* =================================
-                                      USER INFO
-                                  ================================= */}
+                                  {/* USER INFO */}
 
                                   <div className="message-user-info">
-
-                                    {/* NAME + DATE/TIME */}
-
                                     <div className="message-user-top">
-
                                       <strong>
                                         {
                                           user.name
@@ -1181,13 +1494,9 @@ function MessageChat() {
                                           }
                                         </span>
                                       )}
-
                                     </div>
 
-                                    {/* MESSAGE */}
-
                                     <div className="message-user-bottom">
-
                                       <p>
                                         {
                                           user.lastMessage
@@ -1205,11 +1514,8 @@ function MessageChat() {
                                           }
                                         </span>
                                       )}
-
                                     </div>
-
                                   </div>
-
                                 </button>
                               );
                             }
@@ -1222,20 +1528,19 @@ function MessageChat() {
                           users.length ===
                             0 && (
                             <div className="no-users">
-
                               <UserRound
-                                size={32}
+                                size={
+                                  32
+                                }
                               />
 
                               <p>
-                                No users found
+                                No users
+                                found
                               </p>
-
                             </div>
                           )}
-
                       </div>
-
                     </motion.aside>
                   )}
                 </AnimatePresence>
@@ -1245,18 +1550,14 @@ function MessageChat() {
                 ================================================= */}
 
                 <section className="message-conversation">
-
                   {/* =================================================
                       CONVERSATION HEADER
                   ================================================= */}
 
                   {selectedUser ? (
                     <div className="conversation-header">
-
                       <div className="conversation-user">
-
                         <div className="conversation-avatar-wrapper">
-
                           <UserAvatar
                             user={
                               selectedUser
@@ -1273,11 +1574,9 @@ function MessageChat() {
                                 : "offline"
                             }`}
                           />
-
                         </div>
 
                         <div className="conversation-user-details">
-
                           <h4>
                             {
                               selectedUser.name
@@ -1299,13 +1598,10 @@ function MessageChat() {
                               ? "Online"
                               : "Offline"}
                           </span>
-
                         </div>
-
                       </div>
 
                       <div className="conversation-actions">
-
                         <button
                           type="button"
                           title="Call"
@@ -1332,27 +1628,20 @@ function MessageChat() {
                             size={18}
                           />
                         </button>
-
                       </div>
-
                     </div>
                   ) : (
                     <div className="conversation-header">
-
                       <div className="conversation-user">
-
                         <div className="conversation-avatar-wrapper">
-
                           <div className="conversation-avatar empty-avatar">
                             <UserRound
                               size={20}
                             />
                           </div>
-
                         </div>
 
                         <div className="conversation-user-details">
-
                           <h4>
                             Select a user
                           </h4>
@@ -1360,11 +1649,8 @@ function MessageChat() {
                           <span>
                             Choose a conversation
                           </span>
-
                         </div>
-
                       </div>
-
                     </div>
                   )}
 
@@ -1373,142 +1659,215 @@ function MessageChat() {
                   ================================================= */}
 
                   <div className="messages-container">
-
                     {!selectedUser && (
                       <div className="no-conversation">
-
                         <MessageCircle
                           size={42}
                         />
 
                         <h4>
-                          No conversation selected
+                          No conversation
+                          selected
                         </h4>
 
                         <p>
-                          Select a user from the sidebar to start chatting.
+                          Select a user from
+                          the sidebar to start
+                          chatting.
                         </p>
-
                       </div>
                     )}
 
                     {selectedUser && (
                       <>
-                        {/* DATE */}
+                        {/* ==========================================
+                            LOADING
+                        ========================================== */}
 
-                        <div className="chat-date">
-                          <span>
-                            Today
-                          </span>
-                        </div>
-
-                        {/* MESSAGES */}
-
-                        {(
-                          messages[
-                            selectedUserId
-                          ] || []
-                        ).map(
-                          (item) => {
-
-                            const isMine =
-                              item.sender ===
-                              "me";
-
-                            return (
-                              <motion.div
-                                key={
-                                  item.id
-                                }
-                                className={`message-row ${
-                                  isMine
-                                    ? "message-row-mine"
-                                    : "message-row-user"
-                                }`}
-                                initial={{
-                                  opacity: 0,
-                                  y: 8,
-                                }}
-                                animate={{
-                                  opacity: 1,
-                                  y: 0,
-                                }}
-                              >
-
-                                {!isMine && (
-                                  <UserAvatar
-                                    user={
-                                      selectedUser
-                                    }
-                                    className="small-avatar"
-                                  />
-                                )}
-
-                                <div
-                                  className={`message-bubble ${
-                                    isMine
-                                      ? "message-mine"
-                                      : "message-user"
-                                  }`}
-                                >
-
-                                  <p>
-                                    {
-                                      item.text
-                                    }
-                                  </p>
-
-                                  <div className="message-meta">
-
-                                    <span>
-                                      {formatDateTime(
-                                        item.createdAt
-                                      )}
-                                    </span>
-
-                                    {isMine && (
-                                      <CheckCheck
-                                        size={14}
-                                      />
-                                    )}
-
-                                  </div>
-
-                                </div>
-
-                              </motion.div>
-                            );
-                          }
-                        )}
-
-                        {/* EMPTY */}
-
-                        {(
-                          messages[
-                            selectedUserId
-                          ] || []
-                        ).length ===
-                          0 && (
+                        {messagesLoading && (
                           <div className="empty-messages">
-
-                            <MessageCircle
+                            <Loader2
                               size={35}
+                              className="message-loading-icon"
                             />
 
                             <p>
-                              No messages yet
+                              Loading messages...
                             </p>
-
-                            <span>
-                              Start the conversation
-                            </span>
-
                           </div>
                         )}
 
+                        {/* ==========================================
+                            ERROR
+                        ========================================== */}
+
+                        {!messagesLoading &&
+                          messagesError && (
+                            <div className="empty-messages">
+                              <RefreshCw
+                                size={35}
+                              />
+
+                              <p>
+                                {
+                                  messagesError
+                                }
+                              </p>
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  fetchMessages(
+                                    selectedUserId
+                                  )
+                                }
+                                className="retry-users-button"
+                              >
+                                <RefreshCw
+                                  size={14}
+                                />
+
+                                Retry
+                              </button>
+                            </div>
+                          )}
+
+                        {/* ==========================================
+                            DATE
+                        ========================================== */}
+
+                        {!messagesLoading &&
+                          !messagesError &&
+                          currentMessages.length >
+                            0 && (
+                            <div className="chat-date">
+                              <span>
+                                Today
+                              </span>
+                            </div>
+                          )}
+
+                        {/* ==========================================
+                            MESSAGES
+                        ========================================== */}
+
+                        {!messagesLoading &&
+                          !messagesError &&
+                          currentMessages.map(
+                            (item) => {
+                              /*
+                                Backend:
+                                senderId = ObjectId / populated user
+
+                                Since selectedUserId is the
+                                receiver/other participant,
+                                sender != selectedUser means
+                                current logged-in user.
+                              */
+
+                              const senderId =
+                                typeof item.senderId ===
+                                "object"
+                                  ? item
+                                      .senderId
+                                      ?._id
+                                  : item.senderId;
+
+                              const isMine =
+                                String(
+                                  senderId
+                                ) !==
+                                String(
+                                  selectedUserId
+                                );
+
+                              return (
+                                <motion.div
+                                  key={
+                                    item.id
+                                  }
+                                  className={`message-row ${
+                                    isMine
+                                      ? "message-row-mine"
+                                      : "message-row-user"
+                                  }`}
+                                  initial={{
+                                    opacity: 0,
+                                    y: 8,
+                                  }}
+                                  animate={{
+                                    opacity: 1,
+                                    y: 0,
+                                  }}
+                                >
+                                  {!isMine && (
+                                    <UserAvatar
+                                      user={
+                                        selectedUser
+                                      }
+                                      className="small-avatar"
+                                    />
+                                  )}
+
+                                  <div
+                                    className={`message-bubble ${
+                                      isMine
+                                        ? "message-mine"
+                                        : "message-user"
+                                    }`}
+                                  >
+                                    <p>
+                                      {
+                                        item.text
+                                      }
+                                    </p>
+
+                                    <div className="message-meta">
+                                      <span>
+                                        {formatDateTime(
+                                          item.createdAt
+                                        )}
+                                      </span>
+
+                                      {isMine && (
+                                        <CheckCheck
+                                          size={
+                                            14
+                                          }
+                                        />
+                                      )}
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              );
+                            }
+                          )}
+
+                        {/* ==========================================
+                            EMPTY
+                        ========================================== */}
+
+                        {!messagesLoading &&
+                          !messagesError &&
+                          currentMessages.length ===
+                            0 && (
+                            <div className="empty-messages">
+                              <MessageCircle
+                                size={35}
+                              />
+
+                              <p>
+                                No messages yet
+                              </p>
+
+                              <span>
+                                Start the
+                                conversation
+                              </span>
+                            </div>
+                          )}
                       </>
                     )}
-
                   </div>
 
                   {/* =================================================
@@ -1516,9 +1875,7 @@ function MessageChat() {
                   ================================================= */}
 
                   <div className="message-input-area">
-
                     <div className="message-input-wrapper">
-
                       <textarea
                         value={
                           message
@@ -1564,7 +1921,6 @@ function MessageChat() {
                           scale: 0.94,
                         }}
                       >
-
                         {sending ? (
                           <Loader2
                             size={17}
@@ -1575,21 +1931,15 @@ function MessageChat() {
                             size={17}
                           />
                         )}
-
                       </motion.button>
-
                     </div>
 
                     <div className="input-hint">
                       Press Enter to send
                     </div>
-
                   </div>
-
                 </section>
-
               </div>
-
             </motion.div>
           </motion.div>
         )}
@@ -1599,5 +1949,3 @@ function MessageChat() {
 }
 
 export default MessageChat;
-
-
