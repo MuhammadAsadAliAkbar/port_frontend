@@ -18,6 +18,7 @@ import LoginPopup from '../components/Login'
 import SignupPopup from '../components/SignupPopup'
 import GoogleMapPremium from '../components/GoogleMapPremium'
 import Navbar from '../components/Navbar'
+import KeyProjects from '../components/KeyProjects';
 
 function PortfolioHome() {
      const [user, setUser] = useState(() => {
@@ -80,6 +81,7 @@ function PortfolioHome() {
                 <About />
                 <Skills />
                 <Knowledge />
+                <KeyProjects />
                 <Projects />
                 <Experience />
                 <Achievements />

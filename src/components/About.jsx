@@ -1,9 +1,12 @@
 import { motion } from "framer-motion";
-import Asad from '../assets/Asa.png'
+import Asad from "../assets/Asa.png";
+import "../css/About.css"
+
 function About() {
   return (
     <section id="about" className="section about">
       <div className="container">
+
         {/* Section Heading */}
         <motion.div
           className="section-heading"
@@ -18,6 +21,7 @@ function About() {
         </motion.div>
 
         <div className="about-grid">
+
           {/* ================= IMAGE SIDE ================= */}
           <motion.div
             className="about-image"
@@ -27,63 +31,13 @@ function About() {
             transition={{ duration: 0.7 }}
           >
             <div className="about-visual">
-              {/* Glow */}
+
               <div className="about-glow" />
 
-              {/* Decorative Rings */}
               <div className="about-ring ring-one" />
               <div className="about-ring ring-two" />
 
-              {/* Main Card */}
-              {/* <div className="about-image-box"> */}
-                {/* <div className="code-window"> */}
-                  {/* <div className="window-header">
-                    <span />
-                    <span />
-                    <span />
-                  </div> */}
-
-                  {/* <div className="code-content">
-                    <p>
-                      <span className="code-purple">const</span>{" "}
-                      <span className="code-blue">developer</span> = {"{"}
-                    </p>
-
-                    <p className="indent">
-                      <span className="code-key">name:</span>{" "}
-                      <span className="code-green">
-                        "Asad Ali"
-                      </span>
-                    </p>
-
-                    <p className="indent">
-                      <span className="code-key">role:</span>{" "}
-                      <span className="code-green">
-                        "Full Stack Developer"
-                      </span>
-                    </p>
-
-                    <p className="indent">
-                      <span className="code-key">stack:</span>{" "}
-                      <span className="code-green">
-                        "MERN"
-                      </span>
-                    </p>
-
-                    <p className="indent">
-                      <span className="code-key">passion:</span>{" "}
-                      <span className="code-green">
-                        "Building"
-                      </span>
-                    </p>
-
-                    <p>{"};"}</p>
-
-                    <div className="code-cursor">|</div>
-                  </div> */}
-                {/* </div> */}
-              {/* </div> */}
-
+              {/* Profile */}
               <div className="about-profile-image">
                 <img
                   src={Asad}
@@ -91,21 +45,48 @@ function About() {
                 />
               </div>
 
-              {/* Floating Cards */}
-              <div className="floating-card card-react">
+              {/* React */}
+              <motion.div
+                className="floating-card card-react"
+                animate={{ y: [0, -8, 0] }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
                 <i className="fab fa-react" />
                 <span>React</span>
-              </div>
+              </motion.div>
 
-              <div className="floating-card card-node">
+              {/* Node */}
+              <motion.div
+                className="floating-card card-node"
+                animate={{ y: [0, 8, 0] }}
+                transition={{
+                  duration: 3.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
                 <i className="fab fa-node-js" />
                 <span>Node.js</span>
-              </div>
+              </motion.div>
 
-              <div className="floating-card card-mongo">
+              {/* Mongo */}
+              <motion.div
+                className="floating-card card-mongo"
+                animate={{ y: [0, -6, 0] }}
+                transition={{
+                  duration: 3.2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
                 <i className="fas fa-database" />
                 <span>MongoDB</span>
-              </div>
+              </motion.div>
+
             </div>
           </motion.div>
 
@@ -117,6 +98,7 @@ function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
+
             <span className="small-title">
               <span className="title-line" />
               WHO I AM
@@ -128,15 +110,13 @@ function About() {
             </h3>
 
             <p className="about-description">
-              I’m a Senior Full Stack / MERN Stack Developer with 5+ years of experience, specializing in building scalable web applications, enterprise dashboards, REST APIs, and modern software solutions.
+              I’m a Senior Full Stack Developer with 7+ years of experience building scalable web applications, enterprise solutions, and high-performance software. Passionate about transforming complex ideas into secure, reliable, and production-ready digital experiences that drive business growth and deliver real value.
             </p>
 
-            <p className="about-description">
-             My expertise includes React.js, Next.js, Angular, Node.js, Express.js, NestJS, MongoDB, PostgreSQL, Redis, Docker, Kafka, Elasticsearch, and AI technologies. I focus on writing clean, secure, high-performance code and delivering reliable solutions that create real business value.
-            </p>
 
             {/* Info Cards */}
             <div className="about-info">
+
               <div className="info-item">
                 <div className="info-icon">
                   <i className="fas fa-user" />
@@ -155,7 +135,7 @@ function About() {
 
                 <div>
                   <strong>Role</strong>
-                  <span>Full Stack Developer</span>
+                  <span>Senior Full Stack Developer</span>
                 </div>
               </div>
 
@@ -166,7 +146,7 @@ function About() {
 
                 <div>
                   <strong>Stack</strong>
-                  <span>MERN Stack</span>
+                  <span>MERN / MEAN Stack</span>
                 </div>
               </div>
 
@@ -182,12 +162,14 @@ function About() {
                   </span>
                 </div>
               </div>
+
             </div>
 
-            {/* Bottom Stats */}
+            {/* Stats */}
             <div className="about-stats">
+
               <div>
-                <strong>5+</strong>
+                <strong>7+</strong>
                 <span>Years Experience</span>
               </div>
 
@@ -200,7 +182,10 @@ function About() {
                 <strong>10+</strong>
                 <span>Technologies</span>
               </div>
+
             </div>
+
+            {/* Resume */}
             <div className="about-actions">
               <a
                 href="/Muhammad_Asad_Mern.pdf"
@@ -211,6 +196,7 @@ function About() {
                 <i className="fas fa-arrow-right arrow-icon" />
               </a>
             </div>
+
           </motion.div>
         </div>
       </div>

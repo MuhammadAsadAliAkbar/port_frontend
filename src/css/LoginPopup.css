@@ -1,5 +1,6 @@
 /* =========================================================
    LOGIN OVERLAY
+   Teal / Cyan theme matching screenshot
 ========================================================= */
 
 .login-overlay {
@@ -14,7 +15,7 @@
   padding: 20px;
 
   background:
-    rgba(5, 10, 20, 0.72);
+    rgba(5, 5, 10, 0.72);
 
   backdrop-filter:
     blur(10px);
@@ -37,22 +38,22 @@
   padding: 34px;
 
   border:
-    1px solid rgba(255, 255, 255, 0.12);
+    1px solid rgba(0, 230, 180, 0.12);
 
   border-radius: 24px;
 
   background:
     linear-gradient(
       145deg,
-      rgba(24, 30, 42, 0.98),
-      rgba(12, 17, 27, 0.98)
+      rgba(13, 17, 23, 0.98),
+      rgba(8, 12, 18, 0.98)
     );
 
   box-shadow:
     0 30px 90px
       rgba(0, 0, 0, 0.45),
     0 0 50px
-      rgba(59, 130, 246, 0.08);
+      rgba(0, 230, 180, 0.08);
 
   color: #fff;
 
@@ -79,7 +80,7 @@
     translateX(-50%);
 
   background:
-    rgba(59, 130, 246, 0.18);
+    rgba(0, 230, 180, 0.18);
 
   filter:
     blur(70px);
@@ -162,15 +163,15 @@
   background:
     linear-gradient(
       135deg,
-      #3b82f6,
-      #6366f1
+      #00e6b4,
+      #0d9488
     );
 
   color: #fff;
 
   box-shadow:
     0 10px 30px
-      rgba(59, 130, 246, 0.28);
+      rgba(0, 230, 180, 0.28);
 }
 
 .login-header h2 {
@@ -247,7 +248,7 @@
   background: transparent;
 
   color:
-    #60a5fa;
+    #5eead4;
 
   font-size: 12px;
 
@@ -259,7 +260,7 @@
 
 .forgot-password:hover {
   color:
-    #93c5fd;
+    #99f6e4;
 }
 
 
@@ -325,14 +326,14 @@
 
 .login-input-wrapper input:focus {
   border-color:
-    rgba(59, 130, 246, 0.75);
+    rgba(0, 230, 180, 0.75);
 
   background:
-    rgba(59, 130, 246, 0.06);
+    rgba(0, 230, 180, 0.06);
 
   box-shadow:
     0 0 0 4px
-      rgba(59, 130, 246, 0.1);
+      rgba(0, 230, 180, 0.1);
 }
 
 
@@ -367,7 +368,7 @@
 
 .password-toggle:hover {
   color:
-    #60a5fa;
+    #5eead4;
 }
 
 
@@ -400,7 +401,7 @@
   height: 15px;
 
   accent-color:
-    #3b82f6;
+    #00e6b4;
 
   cursor: pointer;
 }
@@ -429,11 +430,11 @@
   background:
     linear-gradient(
       135deg,
-      #3b82f6,
-      #6366f1
+      #00e6b4,
+      #0d9488
     );
 
-  color: #fff;
+  color: #05050a;
 
   font-size: 14px;
   font-weight: 700;
@@ -442,7 +443,7 @@
 
   box-shadow:
     0 12px 30px
-      rgba(59, 130, 246, 0.25);
+      rgba(0, 230, 180, 0.25);
 
   transition:
     0.25s ease;
@@ -454,7 +455,7 @@
 
   box-shadow:
     0 16px 38px
-      rgba(59, 130, 246, 0.35);
+      rgba(0, 230, 180, 0.35);
 }
 
 .login-submit:active:not(:disabled) {
@@ -519,7 +520,7 @@
   background: transparent;
 
   color:
-    #60a5fa;
+    #5eead4;
 
   font-size: 13px;
   font-weight: 600;
@@ -529,13 +530,12 @@
 
 .create-account:hover {
   color:
-    #93c5fd;
+    #99f6e4;
 }
 
 
 /* =========================================================
    LIGHT MODE
-   Same style as Signup popup
 ========================================================= */
 
 [data-theme="light"] .login-overlay {
@@ -557,7 +557,7 @@
   background:
     radial-gradient(
       circle at top right,
-      rgba(59, 130, 246, 0.08),
+      rgba(0, 184, 148, 0.08),
       transparent 35%
     ),
     #ffffff;
@@ -569,7 +569,7 @@
     0 30px 80px
       rgba(15, 23, 42, 0.2),
     0 0 40px
-      rgba(59, 130, 246, 0.08);
+      rgba(0, 184, 148, 0.08);
 }
 
 
@@ -579,7 +579,7 @@
 
 [data-theme="light"] .login-popup::before {
   background:
-    rgba(59, 130, 246, 0.08);
+    rgba(0, 184, 148, 0.08);
 
   opacity:
     0.8;
@@ -641,12 +641,12 @@
 
 [data-theme="light"] .forgot-password {
   color:
-    #2563eb;
+    #00b894;
 }
 
 [data-theme="light"] .forgot-password:hover {
   color:
-    #1d4ed8;
+    #0d9488;
 }
 
 
@@ -680,14 +680,14 @@
 
 [data-theme="light"] .login-input-wrapper input:focus {
   border-color:
-    #60a5fa;
+    #00b894;
 
   background:
     #ffffff;
 
   box-shadow:
     0 0 0 3px
-      rgba(59, 130, 246, 0.08);
+      rgba(0, 184, 148, 0.08);
 }
 
 
@@ -730,6 +730,10 @@
     #6b7280;
 }
 
+[data-theme="light"] .remember-me input {
+  accent-color: #00b894;
+}
+
 
 /* =========================================================
    LIGHT MODE LOGIN BUTTON
@@ -739,8 +743,8 @@
   background:
     linear-gradient(
       135deg,
-      #3b82f6,
-      #6366f1
+      #00b894,
+      #0d9488
     );
 
   color:
@@ -767,12 +771,12 @@
 
 [data-theme="light"] .create-account {
   color:
-    #2563eb;
+    #00b894;
 }
 
 [data-theme="light"] .create-account:hover {
   color:
-    #1d4ed8;
+    #0d9488;
 }
 
 

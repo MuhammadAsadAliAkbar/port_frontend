@@ -692,6 +692,315 @@ body.light-mode .hero-bubble {
     0 0 40px rgba(0, 255, 200, 0.12);
 }
 
+/* =========================================
+   ABOUT SECTION — LIGHT MODE
+   DARK MODE REMAINS UNCHANGED
+========================================= */
+
+[data-theme="light"] .about {
+  color: #111111;
+}
+
+
+/* =========================================
+   TEXT — GREEN TO BLACK / GREY
+========================================= */
+
+[data-theme="light"] .about .section-heading h2,
+[data-theme="light"] .about .section-heading span,
+[data-theme="light"] .about .about-content h3,
+[data-theme="light"] .about .about-content h3 span,
+[data-theme="light"] .about .small-title {
+  color: #222222 !important;
+}
+
+[data-theme="light"] .about .section-heading p,
+[data-theme="light"] .about .about-description {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .about .about-stats strong {
+  color: #2f2f2f !important;
+}
+
+[data-theme="light"] .about .about-stats span {
+  color: #666666 !important;
+}
+
+
+/* =========================================
+   TITLE LINE — GREY
+========================================= */
+
+[data-theme="light"] .about .title-line {
+  background: linear-gradient(
+    90deg,
+    #333333,
+    #888888
+  ) !important;
+}
+
+
+/* =========================================
+   REMOVE GREEN GLOW
+========================================= */
+
+[data-theme="light"] .about .about-glow {
+  background: transparent !important;
+  filter: none !important;
+  opacity: 0 !important;
+  box-shadow: none !important;
+}
+
+
+/* =========================================
+   ANIMATED RINGS — GREY
+========================================= */
+
+[data-theme="light"] .about .about-ring {
+  border: 1px dashed rgba(70, 70, 70, 0.32) !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .about .ring-one {
+  border-color: rgba(45, 45, 45, 0.35) !important;
+}
+
+[data-theme="light"] .about .ring-two {
+  border-color: rgba(110, 110, 110, 0.28) !important;
+}
+
+
+/* =========================================
+   PICTURE / IMAGE BOX
+   GREY GRADIENT
+========================================= */
+
+[data-theme="light"] .about .about-image-box {
+  background:
+    linear-gradient(
+      135deg,
+      #f7f7f7 0%,
+      #e5e5e5 45%,
+      #cfcfcf 100%
+    ) !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
+
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.13),
+    inset 0 0 35px rgba(0, 0, 0, 0.035) !important;
+
+  backdrop-filter: blur(20px);
+}
+
+
+/* =========================================
+   REMOVE GREEN IMAGE HOVER GLOW
+========================================= */
+
+[data-theme="light"] .about .about-image-box:hover {
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.17) !important;
+
+  transform: rotate(0deg) translateY(-8px);
+}
+
+
+/* =========================================
+   PROFILE IMAGE — NO GREEN EFFECT
+========================================= */
+
+[data-theme="light"] .about .about-profile-image {
+  filter: none !important;
+  box-shadow: none !important;
+}
+
+
+/* =========================================
+   FLOATING CARDS — GREY GRADIENT
+========================================= */
+
+[data-theme="light"] .about .floating-card {
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #eeeeee 50%,
+      #d8d8d8 100%
+    ) !important;
+
+  color: #222222 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.10) !important;
+}
+
+
+/* =========================================
+   FLOATING CARD ICONS — GREY
+========================================= */
+
+[data-theme="light"] .about .floating-card svg,
+[data-theme="light"] .about .floating-card i {
+  color: #555555 !important;
+  fill: none;
+}
+
+
+/* React / Node / Mongo icon wrappers */
+
+[data-theme="light"] .about .card-react,
+[data-theme="light"] .about .card-node,
+[data-theme="light"] .about .card-mongo {
+  color: #555555 !important;
+}
+
+
+/* =========================================
+   INFO CARDS
+========================================= */
+
+[data-theme="light"] .about .info-item {
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #eeeeee 55%,
+      #dddddd 100%
+    ) !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.11) !important;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.07) !important;
+}
+
+[data-theme="light"] .about .info-item strong {
+  color: #1f1f1f !important;
+}
+
+[data-theme="light"] .about .info-item span {
+  color: #555555 !important;
+}
+
+
+/* =========================================
+   INFO ICONS — GREY
+========================================= */
+
+[data-theme="light"] .about .info-icon {
+  background:
+    linear-gradient(
+      135deg,
+      #dedede,
+      #bdbdbd
+    ) !important;
+
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 4px 10px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .about .info-icon svg {
+  color: #444444 !important;
+  stroke: #444444 !important;
+}
+
+
+/* =========================================
+   AVAILABILITY — GREY
+========================================= */
+
+[data-theme="light"] .about .available {
+  color: #444444 !important;
+}
+
+
+/* =========================================
+   STATS DIVIDER
+========================================= */
+
+[data-theme="light"] .about .about-stats {
+  border-top-color: rgba(0, 0, 0, 0.13) !important;
+}
+
+
+/* =========================================
+   RESUME BUTTON — GREY GRADIENT
+========================================= */
+
+[data-theme="light"] .about .resume-btn {
+  background:
+    linear-gradient(
+      135deg,
+      #777777 0%,
+      #5f5f5f 50%,
+      #3f3f3f 100%
+    ) !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid #777777 !important;
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.18) !important;
+}
+
+
+/* =========================================
+   BUTTON ICON — GREY / WHITE
+========================================= */
+
+[data-theme="light"] .about .resume-btn svg,
+[data-theme="light"] .about .resume-btn i {
+  color: #eeeeee !important;
+  stroke: #eeeeee !important;
+}
+
+
+/* =========================================
+   BUTTON HOVER
+========================================= */
+
+[data-theme="light"] .about .resume-btn:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #555555 0%,
+      #3b3b3b 50%,
+      #222222 100%
+    ) !important;
+
+  color: #ffffff !important;
+
+  border-color: #555555 !important;
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.22) !important;
+
+  transform: translateY(-3px);
+}
+
+
+/* =========================================
+   REMOVE ALL CYAN/GREEN SHADOWS IN LIGHT
+========================================= */
+
+[data-theme="light"] .about .about-image-box,
+[data-theme="light"] .about .floating-card,
+[data-theme="light"] .about .info-item,
+[data-theme="light"] .about .info-icon,
+[data-theme="light"] .about .resume-btn {
+  text-shadow: none !important;
+}
+
 /* Window Header */
 
 .window-header {
@@ -1441,6 +1750,228 @@ body.light-mode .hero-bubble {
 }
 
 /* =========================================
+   SKILLS — LIGHT MODE ONLY
+   DARK MODE REMAINS UNCHANGED
+========================================= */
+
+
+/* =========================================
+   SECTION TEXT
+========================================= */
+
+[data-theme="light"] .skills {
+  color: #111111;
+}
+
+[data-theme="light"] .skills .section-heading h2 {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .skills .section-heading > span {
+  color: #444444 !important;
+}
+
+[data-theme="light"] .skills .section-heading p {
+  color: #555555 !important;
+}
+
+
+/* =========================================
+   CATEGORY HEADING
+========================================= */
+
+[data-theme="light"] .skills .skill-category-heading h3 {
+  color: #222222 !important;
+}
+
+[data-theme="light"] .skills .category-number {
+  color: #666666 !important;
+}
+
+[data-theme="light"] .skills .category-line {
+  background: linear-gradient(
+    90deg,
+    #333333,
+    #999999,
+    transparent
+  ) !important;
+}
+
+
+/* =========================================
+   SKILL CARD
+   GREY GRADIENT BACKGROUND
+========================================= */
+
+[data-theme="light"] .skills .skill-card {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #eeeeee 45%,
+      #d6d6d6 100%
+    ) !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.11) !important;
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75) !important;
+
+  color: #222222 !important;
+}
+
+
+/* =========================================
+   CARD HOVER
+========================================= */
+
+[data-theme="light"] .skills .skill-card:hover {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #e8e8e8 50%,
+      #cccccc 100%
+    ) !important;
+
+  border-color: rgba(0, 0, 0, 0.18) !important;
+
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.13) !important;
+}
+
+
+/* =========================================
+   REMOVE GREEN CARD GLOW
+========================================= */
+
+[data-theme="light"] .skills .skill-glow {
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 0 !important;
+}
+
+
+/* =========================================
+   SKILL ICON
+   GREY
+========================================= */
+
+[data-theme="light"] .skills .skill-icon {
+  background:
+    linear-gradient(
+      145deg,
+      #dedede,
+      #bcbcbc
+    ) !important;
+
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 5px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+
+/* FontAwesome icons */
+
+[data-theme="light"] .skills .skill-icon i {
+  color: #4a4a4a !important;
+}
+
+
+/* =========================================
+   SKILL TITLE
+========================================= */
+
+[data-theme="light"] .skills .skill-title h3 {
+  color: #1f1f1f !important;
+}
+
+[data-theme="light"] .skills .skill-title span {
+  color: #666666 !important;
+}
+
+[data-theme="light"] .skills .skill-title strong {
+  color: #333333 !important;
+}
+
+
+/* =========================================
+   PROGRESS BAR
+   GREY GRADIENT
+========================================= */
+
+[data-theme="light"] .skills .progress {
+  background: rgba(0, 0, 0, 0.10) !important;
+}
+
+[data-theme="light"] .skills .progress span {
+  background:
+    linear-gradient(
+      90deg,
+      #333333,
+      #666666,
+      #999999
+    ) !important;
+
+  box-shadow: none !important;
+}
+
+
+/* =========================================
+   SKILL LEVEL
+========================================= */
+
+[data-theme="light"] .skills .skill-level {
+  color: #666666 !important;
+}
+
+[data-theme="light"] .skills .skill-level span:last-child {
+  color: #333333 !important;
+}
+
+
+/* =========================================
+   STATS
+========================================= */
+
+[data-theme="light"] .skills .skills-stats {
+  color: #222222;
+}
+
+[data-theme="light"] .skills .stat-number {
+  color: #222222 !important;
+}
+
+[data-theme="light"] .skills .stat-number span {
+  color: #222222 !important;
+}
+
+[data-theme="light"] .skills .stat-number small {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .skills .stat p {
+  color: #666666 !important;
+}
+
+
+/* =========================================
+   REMOVE ANY GREEN/CYAN EFFECT
+========================================= */
+
+[data-theme="light"] .skills .skill-card,
+[data-theme="light"] .skills .skill-icon,
+[data-theme="light"] .skills .progress span {
+  text-shadow: none !important;
+}
+
+/* =========================================
    EXPERIENCE SECTION
 ========================================= */
 
@@ -2112,6 +2643,273 @@ body.light-mode .hero-bubble {
 
     line-height: 1.6;
   }
+}
+
+/* =========================================================
+   EXPERIENCE - LIGHT MODE
+   Dark mode remains completely unchanged
+========================================================= */
+
+/* =========================================================
+   MAIN SECTION
+========================================================= */
+
+[data-theme="light"] .experience {
+  background: #ffffff !important;
+  color: #111111 !important;
+}
+
+[data-theme="light"] .experience .container {
+  background: transparent !important;
+}
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+[data-theme="light"] .experience .section-heading {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .experience .section-heading > span {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .experience .section-heading h2 {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .experience .section-heading p {
+  color: #666666 !important;
+}
+
+/* =========================================================
+   TIMELINE
+========================================================= */
+
+[data-theme="light"] .experience-timeline {
+  color: #222222 !important;
+}
+
+/* Timeline center line */
+[data-theme="light"] .experience-timeline::before {
+  background: linear-gradient(
+    to bottom,
+    #d0d0d0,
+    #888888,
+    #d0d0d0
+  ) !important;
+
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   TIMELINE DOT
+========================================================= */
+
+[data-theme="light"] .experience-dot {
+  background: #ffffff !important;
+  border: 2px solid #777777 !important;
+  box-shadow:
+    0 0 0 5px rgba(0, 0, 0, 0.04),
+    0 6px 15px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="light"] .experience-dot span {
+  background: #555555 !important;
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   DECORATIVE NUMBER
+========================================================= */
+
+[data-theme="light"] .experience-number {
+  color: #777777 !important;
+  text-shadow: none !important;
+}
+
+/* =========================================================
+   EXPERIENCE CARD
+   PREMIUM GREY GRADIENT
+========================================================= */
+
+[data-theme="light"] .experience-card {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #eeeeee 42%,
+      #d0d0d0 100%
+    ) !important;
+
+  color: #222222 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+
+  filter: none !important;
+}
+
+/* Card hover */
+
+[data-theme="light"] .experience-card:hover {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #e7e7e7 48%,
+      #c7c7c7 100%
+    ) !important;
+
+  border-color: rgba(0, 0, 0, 0.18) !important;
+
+  box-shadow:
+    0 22px 45px rgba(0, 0, 0, 0.14) !important;
+}
+
+/* =========================================================
+   CARD HEADER / DATE
+========================================================= */
+
+[data-theme="light"] .experience-header {
+  color: #444444 !important;
+}
+
+[data-theme="light"] .experience-date {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .experience-date i {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .experience-date span {
+  color: #555555 !important;
+}
+
+/* =========================================================
+   EXPERIENCE TITLE
+========================================================= */
+
+[data-theme="light"] .experience-title-row {
+  color: #222222 !important;
+}
+
+[data-theme="light"] .experience-title-row h3 {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .experience-title-row h4 {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .experience-title-row h4 i {
+  color: #555555 !important;
+}
+
+/* =========================================================
+   EXPERIENCE ICON
+========================================================= */
+
+[data-theme="light"] .experience-icon {
+  background:
+    linear-gradient(
+      145deg,
+      #eeeeee,
+      #c8c8c8
+    ) !important;
+
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.10) !important;
+}
+
+[data-theme="light"] .experience-icon i {
+  color: #444444 !important;
+}
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+[data-theme="light"] .experience-description {
+  color: #666666 !important;
+}
+
+/* =========================================================
+   SKILLS
+========================================================= */
+
+[data-theme="light"] .experience-skills span {
+  background:
+    linear-gradient(
+      145deg,
+      #f2f2f2,
+      #d2d2d2
+    ) !important;
+
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .experience-skills span:hover {
+  background:
+    linear-gradient(
+      145deg,
+      #555555,
+      #333333
+    ) !important;
+
+  color: #ffffff !important;
+
+  border-color: #444444 !important;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+[data-theme="light"] .experience-footer {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .experience-footer i {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .experience-footer span {
+  color: #666666 !important;
+}
+
+/* =========================================================
+   REMOVE GREEN / CYAN GLOW
+========================================================= */
+
+[data-theme="light"] .experience-card,
+[data-theme="light"] .experience-icon,
+[data-theme="light"] .experience-dot,
+[data-theme="light"] .experience-timeline {
+  filter: none !important;
+}
+
+/* =========================================================
+   REMOVE TEXT GLOW
+========================================================= */
+
+[data-theme="light"] .experience,
+[data-theme="light"] .experience * {
+  text-shadow: none !important;
 }
 
 /* =========================================
@@ -2790,6 +3588,509 @@ body.light-mode .hero-bubble {
   }
 }
 
+/* =========================================================
+   PROJECTS - LIGHT MODE
+   Dark mode remains completely unchanged
+========================================================= */
+
+/* =========================================================
+   MAIN PROJECT SECTION
+========================================================= */
+
+[data-theme="light"] .projects {
+  background: #ffffff !important;
+  color: #111111 !important;
+}
+
+[data-theme="light"] .projects .container {
+  background: transparent !important;
+}
+
+/* =========================================================
+   BACKGROUND ORBS
+========================================================= */
+
+[data-theme="light"] .projects-bg-orb {
+  background: transparent !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+[data-theme="light"] .projects-heading {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .projects-heading h2 {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .projects-heading h2 span {
+  color: #444444 !important;
+}
+
+[data-theme="light"] .projects-heading p {
+  color: #666666 !important;
+}
+
+/* Heading number */
+
+[data-theme="light"] .heading-number {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .heading-number span {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .heading-number svg {
+  color: #555555 !important;
+}
+
+/* =========================================================
+   PROJECT FILTERS
+========================================================= */
+
+[data-theme="light"] .project-filters button {
+  background: #f1f1f1 !important;
+  color: #555555 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .project-filters button:hover {
+  background: #dddddd !important;
+  color: #222222 !important;
+
+  border-color: rgba(0, 0, 0, 0.18) !important;
+}
+
+/* Active filter */
+
+[data-theme="light"] .project-filters button.active {
+  background: #444444 !important;
+  color: #ffffff !important;
+
+  border-color: #444444 !important;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Active filter animated background */
+
+[data-theme="light"] .filter-active-bg {
+  background: #444444 !important;
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   PROJECT CARD
+   PREMIUM GREY GRADIENT
+========================================================= */
+
+[data-theme="light"] .project-card {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #eeeeee 42%,
+      #d0d0d0 100%
+    ) !important;
+
+  color: #222222 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+
+  filter: none !important;
+}
+
+/* Card hover */
+
+[data-theme="light"] .project-card:hover {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #e7e7e7 48%,
+      #c7c7c7 100%
+    ) !important;
+
+  border-color: rgba(0, 0, 0, 0.18) !important;
+
+  box-shadow:
+    0 22px 45px rgba(0, 0, 0, 0.14) !important;
+}
+
+/* =========================================================
+   PROJECT IMAGE
+========================================================= */
+
+[data-theme="light"] .project-image {
+  background:
+    linear-gradient(
+      145deg,
+      #eeeeee 0%,
+      #d4d4d4 55%,
+      #bdbdbd 100%
+    ) !important;
+
+  border-color: rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow: none !important;
+}
+
+/* Image grid */
+
+[data-theme="light"] .project-image-grid {
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.04) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.04) 1px,
+      transparent 1px
+    ) !important;
+
+  opacity: 0.5 !important;
+}
+
+/* =========================================================
+   REMOVE IMAGE GLOW
+========================================================= */
+
+[data-theme="light"] .project-image-glow {
+  background: transparent !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* =========================================================
+   PROJECT NUMBER
+========================================================= */
+
+[data-theme="light"] .project-number {
+  color: #444444 !important;
+
+  background: rgba(255, 255, 255, 0.80) !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* =========================================================
+   PROJECT IMAGE INNER
+========================================================= */
+
+[data-theme="light"] .project-image-inner {
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* =========================================================
+   PROJECT ACTION BUTTONS
+========================================================= */
+
+[data-theme="light"] .project-action {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #d8d8d8
+    ) !important;
+
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.10) !important;
+}
+
+[data-theme="light"] .project-action:hover {
+  background: #444444 !important;
+  color: #ffffff !important;
+
+  border-color: #444444 !important;
+}
+
+/* =========================================================
+   PROJECT CONTENT
+========================================================= */
+
+[data-theme="light"] .project-content {
+  color: #222222 !important;
+}
+
+/* =========================================================
+   PROJECT CATEGORY
+========================================================= */
+
+[data-theme="light"] .project-category {
+  color: #666666 !important;
+}
+
+[data-theme="light"] .project-category span {
+  background: #555555 !important;
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   PROJECT TITLE
+========================================================= */
+
+[data-theme="light"] .project-content h3 {
+  color: #111111 !important;
+}
+
+/* =========================================================
+   PROJECT DESCRIPTION
+========================================================= */
+
+[data-theme="light"] .project-content p {
+  color: #666666 !important;
+}
+
+/* =========================================================
+   TECHNOLOGY BADGES
+========================================================= */
+
+[data-theme="light"] .project-tech span {
+  background:
+    linear-gradient(
+      145deg,
+      #f2f2f2,
+      #d4d4d4
+    ) !important;
+
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .project-tech span:hover {
+  background: #555555 !important;
+  color: #ffffff !important;
+}
+
+/* =========================================================
+   PROJECT FOOTER
+========================================================= */
+
+[data-theme="light"] .project-card-footer {
+  color: #444444 !important;
+
+  border-top-color: rgba(0, 0, 0, 0.10) !important;
+}
+
+[data-theme="light"] .project-card-footer span {
+  color: #444444 !important;
+}
+
+[data-theme="light"] .project-card-footer svg {
+  color: #555555 !important;
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+[data-theme="light"] .projects-pagination {
+  color: #444444 !important;
+}
+
+/* Pagination buttons */
+
+[data-theme="light"] .pagination-btn {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #dedede
+    ) !important;
+
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 7px 18px rgba(0, 0, 0, 0.07) !important;
+}
+
+[data-theme="light"] .pagination-btn:hover:not(:disabled) {
+  background: #444444 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .pagination-btn:disabled {
+  opacity: 0.45 !important;
+}
+
+/* =========================================================
+   PAGINATION NUMBERS
+========================================================= */
+
+[data-theme="light"] .pagination-numbers button {
+  background: #eeeeee !important;
+  color: #555555 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+}
+
+[data-theme="light"] .pagination-numbers button:hover {
+  background: #d4d4d4 !important;
+  color: #222222 !important;
+}
+
+[data-theme="light"] .pagination-numbers button.active {
+  background: #444444 !important;
+  color: #ffffff !important;
+
+  border-color: #444444 !important;
+
+  box-shadow:
+    0 7px 18px rgba(0, 0, 0, 0.14) !important;
+}
+
+/* =========================================================
+   CTA
+========================================================= */
+
+[data-theme="light"] .projects-cta {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #eeeeee 45%,
+      #d0d0d0 100%
+    ) !important;
+
+  color: #222222 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+}
+
+/* =========================================================
+   CTA ICON
+========================================================= */
+
+[data-theme="light"] .projects-cta-icon {
+  background:
+    linear-gradient(
+      145deg,
+      #e2e2e2,
+      #bcbcbc
+    ) !important;
+
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow:
+    0 7px 18px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .projects-cta-icon i {
+  color: #444444 !important;
+}
+
+/* =========================================================
+   CTA TEXT
+========================================================= */
+
+[data-theme="light"] .projects-cta-text span {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .projects-cta-text p {
+  color: #222222 !important;
+}
+
+/* =========================================================
+   GITHUB BUTTON
+========================================================= */
+
+[data-theme="light"] .github-btn {
+  background:
+    linear-gradient(
+      145deg,
+      #555555,
+      #2f2f2f
+    ) !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid #444444 !important;
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.16) !important;
+}
+
+[data-theme="light"] .github-btn:hover {
+  background:
+    linear-gradient(
+      145deg,
+      #333333,
+      #111111
+    ) !important;
+
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .github-btn i,
+[data-theme="light"] .github-btn svg {
+  color: #ffffff !important;
+}
+
+/* =========================================================
+   REMOVE GREEN / CYAN GLOW
+========================================================= */
+
+[data-theme="light"] .project-card,
+[data-theme="light"] .project-image,
+[data-theme="light"] .project-image-glow,
+[data-theme="light"] .project-action,
+[data-theme="light"] .projects-cta,
+[data-theme="light"] .projects-cta-icon,
+[data-theme="light"] .github-btn {
+  filter: none !important;
+}
+
+/* =========================================================
+   REMOVE TEXT GLOW
+========================================================= */
+
+[data-theme="light"] .projects,
+[data-theme="light"] .projects * {
+  text-shadow: none !important;
+}
+
 /* =========================================
    ACHIEVEMENTS SECTION
 ========================================= */
@@ -3172,6 +4473,221 @@ body.light-mode .hero-bubble {
   .achievement-card p {
     font-size: 10px;
   }
+}
+
+/* =========================================================
+   ACHIEVEMENTS - LIGHT MODE
+   Dark mode remains completely unchanged
+========================================================= */
+
+/* =========================================================
+   MAIN SECTION
+========================================================= */
+
+[data-theme="light"] .achievements {
+  background: #ffffff !important;
+  color: #111111 !important;
+}
+
+[data-theme="light"] .achievements .container {
+  background: transparent !important;
+}
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+[data-theme="light"] .achievements .section-heading {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .achievements .section-heading > span {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .achievements .section-heading h2 {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .achievements .section-heading p {
+  color: #666666 !important;
+}
+
+/* =========================================================
+   ACHIEVEMENTS GRID
+========================================================= */
+
+[data-theme="light"] .achievements-grid {
+  color: #222222 !important;
+}
+
+/* =========================================================
+   ACHIEVEMENT CARD
+   PREMIUM GREY GRADIENT
+========================================================= */
+
+[data-theme="light"] .achievement-card {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #eeeeee 42%,
+      #d0d0d0 100%
+    ) !important;
+
+  color: #222222 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+
+  filter: none !important;
+}
+
+/* Card hover */
+
+[data-theme="light"] .achievement-card:hover {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #e7e7e7 48%,
+      #c7c7c7 100%
+    ) !important;
+
+  border-color: rgba(0, 0, 0, 0.18) !important;
+
+  box-shadow:
+    0 22px 45px rgba(0, 0, 0, 0.14) !important;
+}
+
+/* =========================================================
+   DECORATIVE INDEX
+========================================================= */
+
+[data-theme="light"] .achievement-index {
+  color: #777777 !important;
+  text-shadow: none !important;
+}
+
+/* =========================================================
+   BACKGROUND GLOW
+   Remove green/cyan glow in light mode
+========================================================= */
+
+[data-theme="light"] .achievement-glow {
+  background: transparent !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* =========================================================
+   ACHIEVEMENT ICON
+========================================================= */
+
+[data-theme="light"] .achievement-icon {
+  background:
+    linear-gradient(
+      145deg,
+      #eeeeee,
+      #c8c8c8
+    ) !important;
+
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.10) !important;
+}
+
+[data-theme="light"] .achievement-icon i {
+  color: #444444 !important;
+}
+
+/* =========================================================
+   ACHIEVEMENT NUMBER
+========================================================= */
+
+[data-theme="light"] .achievement-number {
+  color: #111111 !important;
+  text-shadow: none !important;
+}
+
+/* =========================================================
+   ACHIEVEMENT TITLE
+========================================================= */
+
+[data-theme="light"] .achievement-card h3 {
+  color: #222222 !important;
+}
+
+/* =========================================================
+   ACHIEVEMENT DESCRIPTION
+========================================================= */
+
+[data-theme="light"] .achievement-card p {
+  color: #666666 !important;
+}
+
+/* =========================================================
+   BOTTOM LINE
+========================================================= */
+
+[data-theme="light"] .achievement-line {
+  background: rgba(0, 0, 0, 0.10) !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .achievement-line span {
+  background:
+    linear-gradient(
+      90deg,
+      #555555,
+      #999999
+    ) !important;
+
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+[data-theme="light"] .achievements-footer {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .achievements-footer i {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .achievements-footer span {
+  color: #666666 !important;
+}
+
+/* =========================================================
+   REMOVE GREEN / CYAN EFFECTS
+========================================================= */
+
+[data-theme="light"] .achievement-card,
+[data-theme="light"] .achievement-icon,
+[data-theme="light"] .achievement-glow,
+[data-theme="light"] .achievement-line {
+  filter: none !important;
+}
+
+/* =========================================================
+   REMOVE TEXT GLOW
+========================================================= */
+
+[data-theme="light"] .achievements,
+[data-theme="light"] .achievements * {
+  text-shadow: none !important;
 }
 
 /* =========================================
@@ -3634,6 +5150,295 @@ body.light-mode .hero-bubble {
   .testimonial-controls {
     gap: 18px;
   }
+}
+
+/* =========================================================
+   TESTIMONIALS - LIGHT MODE
+   Dark mode remains completely unchanged
+========================================================= */
+
+/* =========================================================
+   MAIN SECTION
+========================================================= */
+
+[data-theme="light"] .testimonials {
+  background: #ffffff !important;
+  color: #111111 !important;
+}
+
+[data-theme="light"] .testimonials .container {
+  background: transparent !important;
+}
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+[data-theme="light"] .testimonials .section-heading {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .testimonials .section-heading > span {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .testimonials .section-heading h2 {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .testimonials .section-heading p {
+  color: #666666 !important;
+}
+
+/* =========================================================
+   TESTIMONIAL WRAPPER
+========================================================= */
+
+[data-theme="light"] .testimonial-wrapper {
+  color: #222222 !important;
+}
+
+/* =========================================================
+   LARGE DECORATIVE QUOTE
+========================================================= */
+
+[data-theme="light"] .testimonial-big-quote {
+  color: #d0d0d0 !important;
+  text-shadow: none !important;
+}
+
+/* =========================================================
+   TESTIMONIAL CARD
+   PREMIUM GREY GRADIENT
+========================================================= */
+
+[data-theme="light"] .testimonial-card {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #eeeeee 42%,
+      #d0d0d0 100%
+    ) !important;
+
+  color: #222222 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+
+  filter: none !important;
+}
+
+/* Card hover */
+
+[data-theme="light"] .testimonial-card:hover {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #e7e7e7 48%,
+      #c7c7c7 100%
+    ) !important;
+
+  border-color: rgba(0, 0, 0, 0.18) !important;
+
+  box-shadow:
+    0 22px 45px rgba(0, 0, 0, 0.14) !important;
+}
+
+/* =========================================================
+   TOP SECTION
+========================================================= */
+
+[data-theme="light"] .testimonial-top {
+  color: #444444 !important;
+}
+
+/* =========================================================
+   QUOTE ICON
+========================================================= */
+
+[data-theme="light"] .quote-icon {
+  background:
+    linear-gradient(
+      145deg,
+      #eeeeee,
+      #c8c8c8
+    ) !important;
+
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.10) !important;
+}
+
+[data-theme="light"] .quote-icon i {
+  color: #444444 !important;
+}
+
+/* =========================================================
+   STARS
+========================================================= */
+
+[data-theme="light"] .testimonial-stars {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .testimonial-stars i {
+  color: #555555 !important;
+  text-shadow: none !important;
+}
+
+/* =========================================================
+   TESTIMONIAL TEXT
+========================================================= */
+
+[data-theme="light"] .testimonial-text {
+  color: #444444 !important;
+  text-shadow: none !important;
+}
+
+/* =========================================================
+   AUTHOR
+========================================================= */
+
+[data-theme="light"] .testimonial-author {
+  color: #222222 !important;
+}
+
+/* =========================================================
+   AUTHOR AVATAR
+========================================================= */
+
+[data-theme="light"] .author-avatar {
+  background:
+    linear-gradient(
+      145deg,
+      #555555,
+      #2f2f2f
+    ) !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="light"] .author-avatar span {
+  color: #ffffff !important;
+}
+
+/* =========================================================
+   AUTHOR INFO
+========================================================= */
+
+[data-theme="light"] .author-info h3 {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .author-info span {
+  color: #666666 !important;
+}
+
+[data-theme="light"] .author-info span i {
+  color: #555555 !important;
+}
+
+/* =========================================================
+   CONTROLS
+========================================================= */
+
+[data-theme="light"] .testimonial-controls {
+  color: #444444 !important;
+}
+
+/* =========================================================
+   PREVIOUS / NEXT BUTTONS
+========================================================= */
+
+[data-theme="light"] .testimonial-controls > button {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #d8d8d8
+    ) !important;
+
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.10) !important;
+}
+
+[data-theme="light"] .testimonial-controls > button:hover {
+  background:
+    linear-gradient(
+      145deg,
+      #555555,
+      #333333
+    ) !important;
+
+  color: #ffffff !important;
+
+  border-color: #444444 !important;
+}
+
+[data-theme="light"] .testimonial-controls > button i {
+  color: inherit !important;
+}
+
+/* =========================================================
+   DOTS
+========================================================= */
+
+[data-theme="light"] .testimonial-dots button {
+  background: #cccccc !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .testimonial-dots button:hover {
+  background: #888888 !important;
+}
+
+[data-theme="light"] .testimonial-dots button.active {
+  background: #444444 !important;
+
+  border-color: #444444 !important;
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* =========================================================
+   REMOVE GREEN / CYAN GLOW
+========================================================= */
+
+[data-theme="light"] .testimonial-card,
+[data-theme="light"] .quote-icon,
+[data-theme="light"] .author-avatar,
+[data-theme="light"] .testimonial-controls > button {
+  filter: none !important;
+}
+
+/* =========================================================
+   REMOVE TEXT GLOW
+========================================================= */
+
+[data-theme="light"] .testimonials,
+[data-theme="light"] .testimonials * {
+  text-shadow: none !important;
 }
 
 /* =========================================
@@ -5111,6 +6916,272 @@ body.light-mode .hero-bubble {
   }
 }
 
+/* =========================================================
+   EDUCATION - PREMIUM LIGHT MODE
+   Dark mode remains unchanged
+========================================================= */
+
+[data-theme="light"] .education {
+  background: #ffffff !important;
+  color: #111111 !important;
+}
+
+[data-theme="light"] .education .container {
+  background: transparent !important;
+}
+
+/* =========================
+   SECTION HEADING
+========================= */
+
+[data-theme="light"] .education .section-heading {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .education .section-heading span {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .education .section-heading h2 {
+  color: #111111 !important;
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .education .section-heading p {
+  color: #666666 !important;
+}
+
+/* =========================
+   TIMELINE
+========================= */
+
+[data-theme="light"] .education-timeline {
+  color: #222222 !important;
+}
+
+[data-theme="light"] .education-timeline::before {
+  background: linear-gradient(
+    to bottom,
+    #d0d0d0,
+    #777777,
+    #d0d0d0
+  ) !important;
+
+  box-shadow: none !important;
+}
+
+/* =========================
+   TIMELINE ITEM
+========================= */
+
+[data-theme="light"] .education-item {
+  color: #222222 !important;
+}
+
+/* =========================
+   NUMBER
+========================= */
+
+[data-theme="light"] .education-number {
+  color: #444444 !important;
+
+  background: linear-gradient(
+    145deg,
+    #ffffff 0%,
+    #eeeeee 50%,
+    #d0d0d0 100%
+  ) !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+
+  text-shadow: none !important;
+}
+
+/* =========================
+   EDUCATION ICON
+========================= */
+
+[data-theme="light"] .education-icon {
+  background: linear-gradient(
+    145deg,
+    #555555,
+    #333333
+  ) !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid #444444 !important;
+
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.16) !important;
+
+  filter: none !important;
+}
+
+[data-theme="light"] .education-icon i {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+/* =========================
+   EDUCATION CARD
+========================= */
+
+[data-theme="light"] .education-content {
+  background: linear-gradient(
+    145deg,
+    #ffffff 0%,
+    #eeeeee 42%,
+    #d0d0d0 100%
+  ) !important;
+
+  color: #222222 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+
+  filter: none !important;
+}
+
+/* Card hover */
+
+[data-theme="light"] .education-content:hover {
+  background: linear-gradient(
+    145deg,
+    #ffffff 0%,
+    #e7e7e7 48%,
+    #c7c7c7 100%
+  ) !important;
+
+  border-color: rgba(0, 0, 0, 0.18) !important;
+
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.14) !important;
+}
+
+/* =========================
+   CARD TOP
+========================= */
+
+[data-theme="light"] .education-top {
+  color: #444444 !important;
+}
+
+[data-theme="light"] .education-year {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .education-status {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .education-status .status-dot {
+  background: #555555 !important;
+  box-shadow: none !important;
+}
+
+/* =========================
+   DEGREE
+========================= */
+
+[data-theme="light"] .education-content h3 {
+  color: #111111 !important;
+  text-shadow: none !important;
+}
+
+/* =========================
+   INSTITUTE
+========================= */
+
+[data-theme="light"] .education-content h4 {
+  color: #444444 !important;
+}
+
+[data-theme="light"] .education-content h4 i {
+  color: #555555 !important;
+}
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+[data-theme="light"] .education-content p {
+  color: #666666 !important;
+  text-shadow: none !important;
+}
+
+/* =========================
+   TAGS
+========================= */
+
+[data-theme="light"] .education-tags span {
+  background: linear-gradient(
+    145deg,
+    #f2f2f2,
+    #d2d2d2
+  ) !important;
+
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.05) !important;
+
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .education-tags span:hover {
+  background: linear-gradient(
+    145deg,
+    #555555,
+    #333333
+  ) !important;
+
+  color: #ffffff !important;
+
+  border-color: #444444 !important;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+[data-theme="light"] .education-footer {
+  color: #666666 !important;
+}
+
+[data-theme="light"] .education-footer i {
+  color: #444444 !important;
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .education-footer span {
+  color: #666666 !important;
+}
+
+/* =========================
+   REMOVE LIGHT MODE GLOW
+========================= */
+
+[data-theme="light"] .education,
+[data-theme="light"] .education * {
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .education-content,
+[data-theme="light"] .education-icon,
+[data-theme="light"] .education-number {
+  filter: none !important;
+}
+
 /* =========================================
    HERO BUBBLES
 ========================================= */
@@ -6411,6 +8482,8 @@ html {
     font-size: 20px;
   }
 }
+
+
 
 /* =========================================================
    TYPEWRITER

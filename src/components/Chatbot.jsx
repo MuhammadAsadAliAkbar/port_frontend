@@ -2224,7 +2224,7 @@ function Chatbot() {
           FLOATING CHATBOT BUTTON
       =================================================== */}
 
-      <motion.button
+      {/* <motion.button
         type="button"
         className="chatbot-toggle"
         onClick={
@@ -2243,7 +2243,7 @@ function Chatbot() {
         }}
       >
 
-        <i className="fas fa-robot"></i>
+       
 
         <AnimatePresence>
 
@@ -2290,7 +2290,7 @@ function Chatbot() {
 
         </AnimatePresence>
 
-      </motion.button>
+      </motion.button> */}
 
       {/* ===================================================
           CHAT WINDOW

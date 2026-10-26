@@ -1,5 +1,6 @@
 /* =========================================
    FOOTER MA LOGO
+   Teal / Cyan theme matching screenshot
 ========================================= */
 
 .footer-logo {
@@ -25,15 +26,15 @@
   background:
     linear-gradient(
       145deg,
-      rgba(16, 185, 129, 0.16),
-      rgba(6, 78, 59, 0.35)
+      rgba(0, 230, 180, 0.16),
+      rgba(13, 148, 136, 0.35)
     );
 
-  border: 1px solid rgba(52, 211, 153, 0.35);
+  border: 1px solid rgba(0, 230, 180, 0.35);
 
   box-shadow:
-    0 0 20px rgba(16, 185, 129, 0.12),
-    inset 0 0 18px rgba(16, 185, 129, 0.05);
+    0 0 20px rgba(0, 230, 180, 0.12),
+    inset 0 0 18px rgba(0, 230, 180, 0.05);
 
   overflow: hidden;
 
@@ -51,7 +52,7 @@
   background: linear-gradient(
     to bottom,
     transparent,
-    #34d399,
+    #00e6b4,
     transparent
   );
 
@@ -70,7 +71,7 @@
   font-weight: 900;
   line-height: 1;
 
-  color: #34d399;
+  color: #00e6b4;
 
   z-index: 2;
 }
@@ -95,11 +96,11 @@
 .footer-logo:hover .footer-ma-logo {
   transform: translateY(-3px) rotate(-2deg);
 
-  border-color: rgba(52, 211, 153, 0.7);
+  border-color: rgba(0, 230, 180, 0.7);
 
   box-shadow:
-    0 0 30px rgba(16, 185, 129, 0.25),
-    inset 0 0 20px rgba(16, 185, 129, 0.08);
+    0 0 30px rgba(0, 230, 180, 0.25),
+    inset 0 0 20px rgba(0, 230, 180, 0.08);
 }
 
 /* Logo Text */
@@ -116,7 +117,7 @@
 }
 
 .footer-logo-text span {
-  color: #34d399;
+  color: #00e6b4;
   font-size: 15px;
   margin-top: 2px;
 }
@@ -235,7 +236,7 @@
 
 
 /* =====================================================
-   WHATSAPP
+   WHATSAPP (brand green kept)
 ===================================================== */
 
 .premium-whatsapp::before {
@@ -273,19 +274,19 @@
 
 
 /* =====================================================
-   CHATBOT
+   CHATBOT → Teal
 ===================================================== */
 
 .premium-chatbot::before {
   background:
     linear-gradient(
       145deg,
-      rgba(99, 102, 241, 0.30),
+      rgba(0, 230, 180, 0.30),
       rgba(10, 10, 10, 0.78)
     );
 
   border-color:
-    rgba(99, 102, 241, 0.50);
+    rgba(0, 230, 180, 0.50);
 }
 
 
@@ -293,19 +294,19 @@
   background:
     linear-gradient(
       145deg,
-      #6366f1,
-      #4338ca
+      #00e6b4,
+      #0d9488
     );
 
   box-shadow:
-    0 8px 25px rgba(79, 70, 229, 0.40),
+    0 8px 25px rgba(0, 230, 180, 0.40),
     inset 0 1px 1px rgba(255, 255, 255, 0.35);
 }
 
 
 .premium-chatbot:hover .premium-btn-inner {
   box-shadow:
-    0 10px 35px rgba(79, 70, 229, 0.62),
+    0 10px 35px rgba(0, 230, 180, 0.62),
     inset 0 1px 1px rgba(255, 255, 255, 0.45);
 }
 
@@ -339,7 +340,7 @@
 
 
 .premium-chatbot .premium-btn-glow {
-  background: #6366f1;
+  background: #00e6b4;
 }
 
 
@@ -378,7 +379,7 @@
 
 
 .premium-chatbot::after {
-  border: 1px solid rgba(99, 102, 241, 0.45);
+  border: 1px solid rgba(0, 230, 180, 0.45);
 }
 
 
@@ -425,10 +426,10 @@
   border-radius: 12px;
 
   background:
-    rgba(15, 15, 15, 0.92);
+    rgba(13, 17, 23, 0.92);
 
   border:
-    1px solid rgba(255, 255, 255, 0.12);
+    1px solid rgba(0, 230, 180, 0.12);
 
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -467,13 +468,13 @@
     translateY(-50%)
     rotate(45deg);
 
-  background: rgba(15, 15, 15, 0.92);
+  background: rgba(13, 17, 23, 0.92);
 
   border-top:
-    1px solid rgba(255, 255, 255, 0.12);
+    1px solid rgba(0, 230, 180, 0.12);
 
   border-right:
-    1px solid rgba(255, 255, 255, 0.12);
+    1px solid rgba(0, 230, 180, 0.12);
 }
 
 
@@ -557,13 +558,13 @@
 }
 
 /* =========================================================
-   PREMIUM MESSAGE BUTTON
+   PREMIUM MESSAGE BUTTON → Teal
 ========================================================= */
 
 .premium-message {
-  --message-color: #6366f1;
-  --message-color-light: #818cf8;
-  --message-rgb: 99, 102, 241;
+  --message-color: #00e6b4;
+  --message-color-light: #5eead4;
+  --message-rgb: 0, 230, 180;
 
   position: relative;
 }
@@ -604,15 +605,15 @@
   background:
     linear-gradient(
       145deg,
-      rgba(99, 102, 241, 0.16),
-      rgba(129, 140, 248, 0.07)
+      rgba(0, 230, 180, 0.16),
+      rgba(94, 234, 212, 0.07)
     );
 
-  border: 1px solid rgba(129, 140, 248, 0.3);
+  border: 1px solid rgba(94, 234, 212, 0.3);
 
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 8px 25px rgba(99, 102, 241, 0.14);
+    0 8px 25px rgba(0, 230, 180, 0.14);
 
   transition:
     color 0.3s ease,
@@ -690,15 +691,15 @@
 
   border-radius: 50%;
 
-  background: #818cf8;
+  background: #5eead4;
 
-  border: 2px solid var(--bg-primary, #0f172a);
+  border: 2px solid var(--bg-primary, #05050a);
 
   z-index: 5;
 
   box-shadow:
-    0 0 0 3px rgba(99, 102, 241, 0.12),
-    0 0 12px rgba(129, 140, 248, 0.7);
+    0 0 0 3px rgba(0, 230, 180, 0.12),
+    0 0 12px rgba(94, 234, 212, 0.7);
 
   animation: messageDotPulse 2s ease-in-out infinite;
 }
@@ -731,18 +732,18 @@
 .premium-message:hover .premium-btn-inner {
   color: var(--message-color-light);
 
-  border-color: rgba(129, 140, 248, 0.55);
+  border-color: rgba(94, 234, 212, 0.55);
 
   background:
     linear-gradient(
       145deg,
-      rgba(99, 102, 241, 0.25),
-      rgba(129, 140, 248, 0.12)
+      rgba(0, 230, 180, 0.25),
+      rgba(94, 234, 212, 0.12)
     );
 
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 10px 35px rgba(99, 102, 241, 0.25);
+    0 10px 35px rgba(0, 230, 180, 0.25);
 }
 
 .premium-message:hover .premium-btn-inner i {
@@ -750,7 +751,7 @@
 
   filter:
     drop-shadow(
-      0 0 8px rgba(129, 140, 248, 0.6)
+      0 0 8px rgba(94, 234, 212, 0.6)
     );
 }
 
@@ -760,7 +761,7 @@
 ========================================================= */
 
 .premium-message .premium-float-tooltip {
-  border-color: rgba(129, 140, 248, 0.22);
+  border-color: rgba(94, 234, 212, 0.22);
 
   box-shadow:
     0 10px 35px rgba(0, 0, 0, 0.18);
@@ -779,7 +780,7 @@
       rgba(248, 250, 252, 0.9)
     );
 
-  border-color: rgba(99, 102, 241, 0.2);
+  border-color: rgba(0, 184, 148, 0.2);
 
   box-shadow:
     0 8px 25px rgba(15, 23, 42, 0.08),
@@ -788,6 +789,7 @@
 
 [data-theme="light"] .message-notification-dot {
   border-color: #ffffff;
+  background: #00b894;
 }
 
 

@@ -1,5 +1,6 @@
 /* =========================================================
    NAVBAR
+   Teal / Cyan theme matching screenshot
 ========================================================= */
 
 .navbar {
@@ -74,7 +75,7 @@
       rgba(255, 255, 255, 0.055)
     );
 
-  border-color: rgba(255, 255, 255, 0.13);
+  border-color: rgba(0, 230, 180, 0.13);
 
   backdrop-filter: blur(22px) saturate(150%);
   -webkit-backdrop-filter: blur(22px) saturate(150%);
@@ -107,7 +108,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.7),
+    rgba(0, 230, 180, 0.7),
     transparent
   );
 
@@ -220,7 +221,7 @@
 
   box-shadow:
     0 13px 25px rgba(0, 0, 0, 0.25),
-    0 0 22px rgba(59, 130, 246, 0.20),
+    0 0 22px rgba(0, 230, 180, 0.20),
     inset 0 1px 1px rgba(255, 255, 255, 1);
 }
 
@@ -246,7 +247,7 @@
 }
 
 .ma-a {
-  color: #2563eb;
+  color: #00e6b4;
   font-size: 19px;
 
   transform: translate(6px, 4px);
@@ -379,7 +380,6 @@
 
 /* =========================================================
    DARK MODE NAVBAR
-   Existing dark design preserved
 ========================================================= */
 
 [data-theme="dark"] .nav-links button {
@@ -405,25 +405,25 @@
   background:
     linear-gradient(
       135deg,
-      rgba(59, 130, 246, 0.25),
-      rgba(37, 99, 235, 0.10)
+      rgba(0, 230, 180, 0.25),
+      rgba(13, 148, 136, 0.10)
     );
 
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    0 6px 18px rgba(37, 99, 235, 0.10);
+    0 6px 18px rgba(0, 230, 180, 0.10);
 }
 
 [data-theme="dark"] .nav-links button.active::after {
   background: linear-gradient(
     90deg,
     transparent,
-    #60a5fa,
+    #5eead4,
     transparent
   );
 
   box-shadow:
-    0 0 8px rgba(96, 165, 250, 0.8);
+    0 0 8px rgba(94, 234, 212, 0.8);
 }
 
 
@@ -661,7 +661,7 @@
         rgba(10, 15, 25, 0.94)
       );
 
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(0, 230, 180, 0.12);
 
     box-shadow:
       0 20px 50px rgba(0, 0, 0, 0.30),
@@ -746,8 +746,8 @@
     background:
       linear-gradient(
         135deg,
-        rgba(59, 130, 246, 0.25),
-        rgba(37, 99, 235, 0.10)
+        rgba(0, 230, 180, 0.25),
+        rgba(13, 148, 136, 0.10)
       );
   }
 
@@ -997,7 +997,7 @@
   transform: translateX(26px);
 
   background: #182033;
-  color: #c4d2ff;
+  color: #5eead4;
 
   box-shadow:
     0 3px 12px rgba(0, 0, 0, 0.45),
@@ -1059,7 +1059,7 @@
 
 .theme-toggle:focus-visible .theme-track {
   box-shadow:
-    0 0 0 3px rgba(37, 99, 235, 0.15),
+    0 0 0 3px rgba(0, 230, 180, 0.15),
     0 5px 18px rgba(15, 23, 42, 0.12);
 }
 
@@ -1113,7 +1113,7 @@
 
   --shadow-color: rgba(15, 23, 42, 0.08);
 
-  --accent: #2563eb;
+  --accent: #00e6b4;
 
   --navbar-bg: rgba(255, 255, 255, 0.88);
 
@@ -1130,21 +1130,21 @@
 ===================================================== */
 
 [data-theme="dark"] {
-  --bg-primary: #080b12;
-  --bg-secondary: #0d111b;
-  --bg-card: #111722;
+  --bg-primary: #05050a;
+  --bg-secondary: #0d1117;
+  --bg-card: #0d1117;
 
   --text-primary: #f8fafc;
   --text-secondary: #a7b0c0;
   --text-muted: #717b8f;
 
-  --border-color: rgba(255, 255, 255, 0.09);
+  --border-color: rgba(0, 230, 180, 0.09);
 
   --shadow-color: rgba(0, 0, 0, 0.35);
 
-  --accent: #60a5fa;
+  --accent: #5eead4;
 
-  --navbar-bg: rgba(8, 11, 18, 0.86);
+  --navbar-bg: rgba(5, 5, 10, 0.86);
 }
 
 
@@ -1281,10 +1281,10 @@ select {
 .nav-login-btn:hover {
   transform: translateY(-1px);
 
-  border-color: #1b59f8;
-  color: #1b59f8;
+  border-color: #00e6b4;
+  color: #00e6b4;
 
-  background: rgba(27, 89, 248, 0.08);
+  background: rgba(0, 230, 180, 0.08);
 }
 
 /* =========================================================
@@ -1294,20 +1294,20 @@ select {
 .nav-signup-btn {
   border: 1px solid transparent;
 
-  background: #1b59f8;
-  color: #ffffff;
+  background: #00e6b4;
+  color: #05050a;
 
   box-shadow:
-    0 6px 18px rgba(27, 89, 248, 0.22);
+    0 6px 18px rgba(0, 230, 180, 0.22);
 }
 
 .nav-signup-btn:hover {
   transform: translateY(-1px);
 
-  background: #164bd3;
+  background: #00d4a8;
 
   box-shadow:
-    0 8px 24px rgba(27, 89, 248, 0.32);
+    0 8px 24px rgba(0, 230, 180, 0.32);
 }
 
 .nav-login-btn i,
@@ -1330,12 +1330,23 @@ select {
 }
 
 [data-theme="light"] .nav-login-btn:hover {
-  color: #1b59f8;
+  color: #00b894;
 
-  border-color: #1b59f8;
+  border-color: #00b894;
 
   background:
-    rgba(27, 89, 248, 0.06);
+    rgba(0, 184, 148, 0.06);
+}
+
+[data-theme="light"] .nav-signup-btn {
+  background: #00b894;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(0, 184, 148, 0.22);
+}
+
+[data-theme="light"] .nav-signup-btn:hover {
+  background: #00a383;
+  box-shadow: 0 8px 24px rgba(0, 184, 148, 0.32);
 }
 
 /* =========================================================
@@ -1355,10 +1366,10 @@ select {
 [data-theme="dark"] .nav-login-btn:hover {
   color: #ffffff;
 
-  border-color: #1b59f8;
+  border-color: #00e6b4;
 
   background:
-    rgba(27, 89, 248, 0.12);
+    rgba(0, 230, 180, 0.12);
 }
 
 /* =========================================================
@@ -1425,7 +1436,6 @@ select {
 
 /* =========================================================
    PROFILE DROPDOWN ONLY
-   Existing Navbar CSS ko touch nahi karta
 ========================================================= */
 
 .nav-profile-wrapper {
@@ -1464,7 +1474,7 @@ select {
 .nav-profile-btn.profile-active {
   background: rgba(255, 255, 255, 0.075);
 
-  border-color: rgba(59, 130, 246, 0.35);
+  border-color: rgba(0, 230, 180, 0.35);
 
   box-shadow:
     0 8px 25px rgba(0, 0, 0, 0.18);
@@ -1491,8 +1501,8 @@ select {
   background:
     linear-gradient(
       135deg,
-      #2563eb,
-      #7c3aed
+      #00e6b4,
+      #0d9488
     );
 
   color: #ffffff;
@@ -1501,7 +1511,7 @@ select {
   font-weight: 800;
 
   box-shadow:
-    0 5px 15px rgba(37, 99, 235, 0.25);
+    0 5px 15px rgba(0, 230, 180, 0.25);
 }
 
 /* =========================================================
@@ -1553,7 +1563,7 @@ select {
 
   padding: 10px;
 
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(0, 230, 180, 0.10);
   border-radius: 17px;
 
   background:
@@ -1595,8 +1605,8 @@ select {
     linear-gradient(
       90deg,
       transparent,
-      rgba(59, 130, 246, 0.9),
-      rgba(124, 58, 237, 0.8),
+      rgba(0, 230, 180, 0.9),
+      rgba(13, 148, 136, 0.8),
       transparent
     );
 
@@ -1635,8 +1645,8 @@ select {
   background:
     linear-gradient(
       135deg,
-      #2563eb,
-      #7c3aed
+      #00e6b4,
+      #0d9488
     );
 
   color: #ffffff;
@@ -1645,7 +1655,7 @@ select {
   font-weight: 800;
 
   box-shadow:
-    0 8px 25px rgba(37, 99, 235, 0.28);
+    0 8px 25px rgba(0, 230, 180, 0.28);
 
   position: relative;
   overflow: hidden;
@@ -1784,9 +1794,9 @@ select {
   border-radius: 10px;
 
   background:
-    rgba(59, 130, 246, 0.10);
+    rgba(0, 230, 180, 0.10);
 
-  color: #60a5fa;
+  color: #5eead4;
 
   font-size: 13px;
 
@@ -1799,9 +1809,9 @@ select {
 .profile-menu-item:hover
 .profile-menu-icon {
   background:
-    rgba(59, 130, 246, 0.16);
+    rgba(0, 230, 180, 0.16);
 
-  color: #93c5fd;
+  color: #99f6e4;
 
   transform: scale(1.04);
 }
@@ -1870,7 +1880,6 @@ select {
 
 /* =========================================================
    LIGHT MODE DROPDOWN
-   Sirf dropdown ke light-mode colors
 ========================================================= */
 
 html[data-theme="light"]
@@ -1899,7 +1908,7 @@ body[data-theme="light"]
     rgba(15, 23, 42, 0.06);
 
   border-color:
-    rgba(37, 99, 235, 0.25);
+    rgba(0, 184, 148, 0.25);
 
   box-shadow:
     0 8px 25px rgba(15, 23, 42, 0.10);
@@ -2019,7 +2028,6 @@ body[data-theme="light"]
 
 /* =========================================================
    MOBILE
-   Existing mobile navbar ko disturb nahi karega
 ========================================================= */
 
 @media (max-width: 850px) {
@@ -2103,8 +2111,8 @@ body[data-theme="light"]
 
   background: linear-gradient(
     135deg,
-    #2563eb,
-    #7c3aed
+    #00e6b4,
+    #0d9488
   );
 
   color: #ffffff;
@@ -2131,8 +2139,8 @@ body[data-theme="light"]
 
   background: linear-gradient(
     135deg,
-    #2563eb,
-    #7c3aed
+    #00e6b4,
+    #0d9488
   );
 
   color: #ffffff;
@@ -2158,8 +2166,8 @@ body[data-theme="light"]
 
   background: linear-gradient(
     135deg,
-    #2563eb,
-    #7c3aed
+    #00e6b4,
+    #0d9488
   );
 
   color: #ffffff;
@@ -2176,7 +2184,7 @@ body[data-theme="light"]
 [data-theme="light"] .mobile-user-avatar {
   background: linear-gradient(
     135deg,
-    #2563eb,
-    #6366f1
+    #00b894,
+    #0d9488
   );
 }

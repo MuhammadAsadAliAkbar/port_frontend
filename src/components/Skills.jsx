@@ -31,6 +31,7 @@ const skills = [
     category: "Frameworks",
     items: [
       ["React.js", "fab fa-react", 90],
+      ["React Native", "fas fa-mobile-screen-button", 90],
       ["Next.js", "fas fa-layer-group", 88],
       ["Angular", "fab fa-angular", 85],
       ["Node.js", "fab fa-node-js", 88],
@@ -113,6 +114,17 @@ const skills = [
       ["Swagger", "fas fa-book", 88],
       ["VS Code", "fas fa-code", 95],
       ["Cursor", "fas fa-terminal", 90],
+    ],
+  },
+
+   // =========================
+  // SAP
+  // =========================
+  {
+    category: "Sap",
+    items: [
+      ["SAP Business One", "fas fa-cubes", 92],
+      ["SAP HANA", "fas fa-database", 88],
     ],
   },
 ];
@@ -398,7 +410,7 @@ function Skills() {
           {/* EXPERIENCE */}
 
           <Stat
-            number={5}
+            number={7}
             suffix="+"
             text="Years of Experience"
           />

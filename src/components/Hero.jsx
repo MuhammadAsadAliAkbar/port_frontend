@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Asad from '../assets/Asa.png'
 // import Asad from '../assets/As.jpeg'
+import "../css/Hero.css"
 
 const roles = [
   "Full Stack Developer",
@@ -188,14 +189,11 @@ function Hero() {
           </h2>
 
           <p>
-           Senior Full Stack / MERN Stack Developer with 5+ years of experience building scalable web applications, enterprise solutions, REST APIs, and modern AI-powered systems.
+          Senior Full Stack Developer with 7+ years of experience building scalable web applications, enterprise solutions, and AI-powered systems. Passionate about transforming complex ideas into secure, high-performance, and production-ready software that drives business growth and delivers exceptional user experiences.
 
           </p>
 
-          <p>
-                       I turn complex ideas into secure, high-performance, and production-ready software using modern technologies like React, Next.js, Node.js, Angular, MongoDB, and AI.
-
-          </p>
+        
 
           {/* =================================================
               BUTTONS

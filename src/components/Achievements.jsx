@@ -22,7 +22,7 @@ const achievements = [
   },
   {
     icon: "fas fa-award",
-    number: "5+",
+    number: "7+",
     title: "Years Experience",
     text: "Professional experience in full-stack development.",
   },

@@ -39,3 +39,454 @@
   cursor: not-allowed;
   transform: none !important;
 }
+
+/* =========================================================
+   CONTACT - PREMIUM LIGHT MODE
+   Dark mode remains completely unchanged
+========================================================= */
+
+[data-theme="light"] .contact {
+  background: #ffffff !important;
+  color: #111111 !important;
+}
+
+[data-theme="light"] .contact .container {
+  background: transparent !important;
+}
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+[data-theme="light"] .contact .section-heading {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .contact .section-heading > span {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .contact .section-heading h2 {
+  color: #111111 !important;
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .contact .section-heading p {
+  color: #666666 !important;
+}
+
+/* =========================================================
+   LEFT SIDE
+========================================================= */
+
+[data-theme="light"] .contact-info {
+  color: #222222 !important;
+}
+
+[data-theme="light"] .availability {
+  background: #eeeeee !important;
+  color: #444444 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .availability-dot {
+  background: #555555 !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .contact-small-title {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .contact-info h3 {
+  color: #111111 !important;
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .contact-info h3 span {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .contact-description {
+  color: #666666 !important;
+  text-shadow: none !important;
+}
+
+/* =========================================================
+   CONTACT DETAILS CARDS
+========================================================= */
+
+[data-theme="light"] .contact-item {
+  background: linear-gradient(
+    145deg,
+    #ffffff 0%,
+    #eeeeee 42%,
+    #d0d0d0 100%
+  ) !important;
+
+  color: #222222 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+
+  filter: none !important;
+}
+
+[data-theme="light"] .contact-item:hover {
+  background: linear-gradient(
+    145deg,
+    #ffffff 0%,
+    #e7e7e7 48%,
+    #c7c7c7 100%
+  ) !important;
+
+  border-color: rgba(0, 0, 0, 0.18) !important;
+
+  box-shadow:
+    0 18px 38px rgba(0, 0, 0, 0.13) !important;
+}
+
+/* Contact item icon */
+
+[data-theme="light"] .contact-item-icon {
+  background: linear-gradient(
+    145deg,
+    #555555,
+    #333333
+  ) !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid #444444 !important;
+
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.14) !important;
+
+  filter: none !important;
+}
+
+[data-theme="light"] .contact-item-icon i {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+/* Contact item text */
+
+[data-theme="light"] .contact-item > div > span {
+  color: #666666 !important;
+}
+
+[data-theme="light"] .contact-item > div > strong {
+  color: #222222 !important;
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .contact-arrow {
+  color: #555555 !important;
+  text-shadow: none !important;
+}
+
+/* =========================================================
+   CONTACT FORM CARD
+========================================================= */
+
+[data-theme="light"] .contact-form {
+  background: linear-gradient(
+    145deg,
+    #ffffff 0%,
+    #eeeeee 42%,
+    #d0d0d0 100%
+  ) !important;
+
+  color: #222222 !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88) !important;
+
+  filter: none !important;
+}
+
+[data-theme="light"] .contact-form:hover {
+  border-color: rgba(0, 0, 0, 0.16) !important;
+
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88) !important;
+}
+
+/* =========================================================
+   FORM HEADING
+========================================================= */
+
+[data-theme="light"] .form-heading {
+  color: #111111 !important;
+}
+
+[data-theme="light"] .form-heading span {
+  color: #555555 !important;
+}
+
+[data-theme="light"] .form-heading h3 {
+  color: #111111 !important;
+  text-shadow: none !important;
+}
+
+/* Form icon */
+
+[data-theme="light"] .form-icon {
+  background: linear-gradient(
+    145deg,
+    #555555,
+    #333333
+  ) !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid #444444 !important;
+
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="light"] .form-icon i {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+/* =========================================================
+   INPUT LABELS
+========================================================= */
+
+[data-theme="light"] .input-group label {
+  color: #444444 !important;
+}
+
+/* =========================================================
+   INPUT WRAPPERS
+========================================================= */
+
+[data-theme="light"] .input-wrapper,
+[data-theme="light"] .textarea-wrapper {
+  background: linear-gradient(
+    145deg,
+    #f7f7f7,
+    #dddddd
+  ) !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.05),
+    0 5px 12px rgba(0, 0, 0, 0.04) !important;
+
+  color: #222222 !important;
+}
+
+[data-theme="light"] .input-wrapper:focus-within,
+[data-theme="light"] .textarea-wrapper:focus-within {
+  background: #ffffff !important;
+
+  border-color: rgba(0, 0, 0, 0.28) !important;
+
+  box-shadow:
+    0 0 0 3px rgba(0, 0, 0, 0.06),
+    0 8px 18px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Input icons */
+
+[data-theme="light"] .input-wrapper > i,
+[data-theme="light"] .textarea-wrapper > i {
+  color: #555555 !important;
+  text-shadow: none !important;
+}
+
+/* Inputs */
+
+[data-theme="light"] .input-wrapper input,
+[data-theme="light"] .textarea-wrapper textarea {
+  color: #111111 !important;
+  background: transparent !important;
+}
+
+[data-theme="light"] .input-wrapper input::placeholder,
+[data-theme="light"] .textarea-wrapper textarea::placeholder {
+  color: #888888 !important;
+}
+
+/* =========================================================
+   STATUS MESSAGE
+========================================================= */
+
+[data-theme="light"] .contact-form-status {
+  color: #333333 !important;
+
+  background: linear-gradient(
+    145deg,
+    #f2f2f2,
+    #dcdcdc
+  ) !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .contact-form-status.success {
+  color: #333333 !important;
+}
+
+[data-theme="light"] .contact-form-status.error {
+  color: #333333 !important;
+}
+
+[data-theme="light"] .contact-form-status i {
+  color: #555555 !important;
+}
+
+/* =========================================================
+   SUBMIT BUTTON
+========================================================= */
+
+[data-theme="light"] .contact-submit {
+  background: linear-gradient(
+    145deg,
+    #555555,
+    #2f2f2f
+  ) !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid #444444 !important;
+
+  box-shadow:
+    0 12px 25px rgba(0, 0, 0, 0.16) !important;
+
+  filter: none !important;
+}
+
+[data-theme="light"] .contact-submit:hover {
+  background: linear-gradient(
+    145deg,
+    #333333,
+    #111111
+  ) !important;
+
+  color: #ffffff !important;
+
+  box-shadow:
+    0 16px 30px rgba(0, 0, 0, 0.20) !important;
+}
+
+[data-theme="light"] .contact-submit:disabled {
+  opacity: 0.65 !important;
+}
+
+/* Submit icon */
+
+[data-theme="light"] .submit-icon {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-theme="light"] .submit-icon i {
+  color: #ffffff !important;
+}
+
+/* =========================================================
+   BOTTOM
+========================================================= */
+
+[data-theme="light"] .contact-bottom {
+  color: #666666 !important;
+}
+
+[data-theme="light"] .contact-bottom i {
+  color: #444444 !important;
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .contact-bottom span {
+  color: #666666 !important;
+}
+
+/* =========================================================
+   REMOVE ALL LIGHT-MODE GLOW
+========================================================= */
+
+[data-theme="light"] .contact,
+[data-theme="light"] .contact * {
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .contact-form,
+[data-theme="light"] .contact-item,
+[data-theme="light"] .contact-item-icon,
+[data-theme="light"] .form-icon,
+[data-theme="light"] .contact-submit,
+[data-theme="light"] .input-wrapper,
+[data-theme="light"] .textarea-wrapper {
+  filter: none !important;
+}
+
+/* =========================================================
+   CONTACT FORM FIELDS - ROUNDED LIGHT MODE
+========================================================= */
+
+[data-theme="light"] .input-wrapper,
+[data-theme="light"] .textarea-wrapper {
+  border-radius: 14px !important;
+  overflow: hidden !important;
+}
+
+/* Input fields */
+
+[data-theme="light"] .input-wrapper input {
+  border-radius: 14px !important;
+  outline: none !important;
+}
+
+/* Textarea */
+
+[data-theme="light"] .textarea-wrapper textarea {
+  border-radius: 14px !important;
+  outline: none !important;
+  resize: vertical;
+}
+
+/* Keep rounded corners when focused */
+
+[data-theme="light"] .input-wrapper:focus-within,
+[data-theme="light"] .textarea-wrapper:focus-within {
+  border-radius: 14px !important;
+}
+
+/* Placeholder */
+
+[data-theme="light"] .input-wrapper input::placeholder,
+[data-theme="light"] .textarea-wrapper textarea::placeholder {
+  color: #888888 !important;
+}
+
+/* Smooth premium transition */
+
+[data-theme="light"] .input-wrapper,
+[data-theme="light"] .textarea-wrapper,
+[data-theme="light"] .input-wrapper input,
+[data-theme="light"] .textarea-wrapper textarea {
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease !important;
+}
