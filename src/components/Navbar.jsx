@@ -713,7 +713,7 @@ const handleLogout = async () => {
               <>
                 {/* LOGIN */}
 
-                <button
+                {/* <button
                   type="button"
                   className="nav-login-btn"
                   onClick={handleLogin}
@@ -723,11 +723,11 @@ const handleLogout = async () => {
                   <span>
                     Login
                   </span>
-                </button>
+                </button> */}
 
                 {/* SIGN UP */}
 
-                <button
+                {/* <button
                   type="button"
                   className="nav-signup-btn"
                   onClick={handleSignup}
@@ -737,7 +737,7 @@ const handleLogout = async () => {
                   <span>
                     Sign Up
                   </span>
-                </button>
+                </button>  */}
               </>
             ) : (
 
