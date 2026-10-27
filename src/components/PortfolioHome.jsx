@@ -88,7 +88,7 @@ function PortfolioHome() {
                 <Testimonials />
                 <ClientAchievements />
                 <Education />
-                <GoogleMapPremium />
+                {/* <GoogleMapPremium /> */}
                 <Contact />
             </main>
             <Footers />
