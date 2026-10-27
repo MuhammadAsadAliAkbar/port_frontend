@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+// import "../css/Education.css"
 
 const educationData = [
    {

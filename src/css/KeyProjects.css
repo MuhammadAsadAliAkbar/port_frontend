@@ -52,6 +52,27 @@ body.dark-theme .kp-section {
 }
 
 /* =========================================
+   LIGHT MODE - Teal / Cyan
+========================================= */
+
+[data-theme="light"] .kp-section {
+  --kp-primary: #00e6b4;
+  --kp-primary-dark: #0d9488;
+  --kp-heading: #0f172a;
+  --kp-muted: #64748b;
+  --kp-border: rgba(0, 230, 180, 0.18);
+  --kp-surface: #ffffff;
+  --kp-background: #f8fafc;
+  --kp-soft: #f1f5f9;
+  --kp-shadow: 0 12px 32px rgba(0, 230, 180, 0.08);
+
+  background: 
+    radial-gradient(ellipse 80% 60% at 10% 50%, rgba(0, 230, 180, 0.06) 0%, transparent 60%),
+    var(--kp-background);
+  color: var(--kp-heading);
+}
+
+/* =========================================
    HEADING
 ========================================= */
 
@@ -91,7 +112,7 @@ body.dark-theme .kp-section {
   font-weight: 800;
   letter-spacing: -1.8px;
   line-height: 1.15;
-  color: #ffffff;
+  color: var(--kp-heading);
 }
 
 .kp-section .kp-heading-accent {
@@ -110,7 +131,7 @@ body.dark-theme .kp-section {
 .kp-section .kp-heading-description {
   max-width: 480px;
   margin: 14px auto 0;
-  color: #94a3b8;
+  color: var(--kp-muted);
   font-size: 15px;
   line-height: 1.7;
   font-weight: 400;
@@ -814,6 +835,10 @@ body.dark-theme .kp-section {
   isolation: isolate;
 }
 
+[data-theme="light"] .kp-card-image {
+  background: #f1f5f9;
+}
+
 .kp-card-image img {
   display: block;
   width: 100%;
@@ -839,6 +864,11 @@ body.dark-theme .kp-section {
   gap: 10px;
   background: linear-gradient(135deg, #0d1117, #111722);
   color: #94a3b8;
+}
+
+[data-theme="light"] .kp-project-image-fallback {
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  color: #64748b;
 }
 
 .kp-project-image-fallback > span:first-child {
@@ -875,6 +905,12 @@ body.dark-theme .kp-section {
   -webkit-backdrop-filter: blur(10px);
 }
 
+[data-theme="light"] .kp-project-number {
+  background: rgba(255, 255, 255, 0.9);
+  color: #0f172a;
+  border-color: rgba(0, 230, 180, 0.3);
+}
+
 .kp-image-category {
   position: absolute;
   bottom: 12px;
@@ -892,6 +928,11 @@ body.dark-theme .kp-section {
   text-overflow: ellipsis;
   white-space: nowrap;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] .kp-image-category {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 3px 12px rgba(0, 230, 180, 0.1);
 }
 
 .kp-card-content {
@@ -1034,6 +1075,13 @@ body.dark-theme .kp-section {
     box-shadow 0.2s ease;
 }
 
+[data-theme="light"] .kp-page-button,
+[data-theme="light"] .kp-page-number {
+  background: #ffffff;
+  border-color: rgba(0, 230, 180, 0.18);
+  color: #64748b;
+}
+
 .kp-page-button {
   gap: 8px;
 }
@@ -1113,14 +1161,27 @@ body.dark-theme .kp-section {
   overflow: hidden;
 }
 
+[data-theme="light"] .kp-clear-filter-wrapper {
+  background: #ffffff;
+  border-color: rgba(0, 230, 180, 0.18);
+}
+
 .kp-active-filter-label {
   color: #94a3b8;
   font-size: 13px;
 }
 
+[data-theme="light"] .kp-active-filter-label {
+  color: #64748b;
+}
+
 .kp-active-filter-label strong {
   color: #f1f5f9;
   font-weight: 700;
+}
+
+[data-theme="light"] .kp-active-filter-label strong {
+  color: #0f172a;
 }
 
 .kp-clear-filter {
@@ -1170,7 +1231,6 @@ body.dark-theme .kp-section {
 
 /* =========================================
    PROJECT IMAGE CLICK-TO-PREVIEW MODAL
-   Add this block to KeyProjects.css
 ========================================= */
 
 .kp-card-image {
@@ -1383,4 +1443,3 @@ body.dark-theme .kp-section {
     transform: translate(-50%, -50%);
   }
 }
-

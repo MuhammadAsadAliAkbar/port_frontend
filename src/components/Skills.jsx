@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import "../css/Skills.css"
 
 /* =========================================================
    SKILLS DATA

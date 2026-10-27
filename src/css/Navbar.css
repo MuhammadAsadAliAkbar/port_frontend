@@ -284,8 +284,8 @@
 
   background: transparent;
 
-  /* Light mode */
-  color: #6b7280;
+  /* Light mode - Updated */
+  color: #4b5563;
 
   font-size: 13px;
   font-weight: 600;
@@ -304,46 +304,44 @@
 
 
 /* =========================================================
-   LIGHT MODE - HOVER
+   LIGHT MODE - HOVER (Updated - Teal Theme)
 ========================================================= */
 
 .nav-links button:hover {
   color: #ffffff;
 
-  background:
-    linear-gradient(
-      135deg,
-      #6b7280,
-      #4b5563
-    );
+  background: linear-gradient(
+    135deg,
+    #00e6b4,
+    #0d9488
+  );
 
   transform:
     translateY(-2px)
     rotateX(4deg);
 
   box-shadow:
-    0 8px 18px rgba(75, 85, 99, 0.20),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 8px 20px rgba(0, 230, 180, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 
 /* =========================================================
-   LIGHT MODE - ACTIVE
+   LIGHT MODE - ACTIVE (Updated - Teal Theme)
 ========================================================= */
 
 .nav-links button.active {
   color: #ffffff;
 
-  background:
-    linear-gradient(
-      135deg,
-      #6b7280,
-      #4b5563
-    );
+  background: linear-gradient(
+    135deg,
+    #00e6b4,
+    #0d9488
+  );
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 6px 18px rgba(75, 85, 99, 0.20);
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 6px 18px rgba(0, 230, 180, 0.22);
 }
 
 
@@ -372,7 +370,7 @@
   );
 
   box-shadow:
-    0 0 8px rgba(255, 255, 255, 0.70);
+    0 0 10px rgba(255, 255, 255, 0.8);
 
   animation: activeLine 0.5s ease;
 }
@@ -622,18 +620,18 @@
     background:
       linear-gradient(
         145deg,
-        rgba(245, 247, 250, 0.97),
-        rgba(229, 231, 235, 0.96)
+        rgba(255, 255, 255, 0.98),
+        rgba(248, 250, 252, 0.97)
       );
 
-    border: 1px solid rgba(107, 114, 128, 0.18);
+    border: 1px solid rgba(0, 230, 180, 0.15);
 
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
 
     box-shadow:
-      0 20px 50px rgba(15, 23, 42, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.80);
+      0 20px 50px rgba(0, 230, 180, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
 
     opacity: 0;
     visibility: hidden;
@@ -696,31 +694,22 @@
   }
 
 
-  /* Light mobile buttons */
+  /* Light mobile buttons (Updated) */
 
   .nav-links button {
-    color: #ffffff;
-
-    background:
-      linear-gradient(
-        135deg,
-        #6b7280,
-        #4b5563
-      );
-
-    box-shadow:
-      0 4px 10px rgba(75, 85, 99, 0.12);
+    color: #0f172a;
+    background: transparent;
+    box-shadow: none;
   }
 
   .nav-links button:hover {
     color: #ffffff;
+    background: linear-gradient(135deg, #00e6b4, #0d9488);
+  }
 
-    background:
-      linear-gradient(
-        135deg,
-        #4b5563,
-        #374151
-      );
+  .nav-links button.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, #00e6b4, #0d9488);
   }
 
 
@@ -1097,25 +1086,25 @@
 
 
 /* =====================================================
-   GLOBAL THEME SYSTEM
+   GLOBAL THEME SYSTEM (Updated Light Mode)
 ===================================================== */
 
 :root {
   --bg-primary: #ffffff;
-  --bg-secondary: #f7f8fc;
+  --bg-secondary: #f8fafc;
   --bg-card: #ffffff;
 
-  --text-primary: #111827;
-  --text-secondary: #64748b;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
   --text-muted: #94a3b8;
 
-  --border-color: rgba(15, 23, 42, 0.10);
+  --border-color: rgba(0, 230, 180, 0.12);
 
-  --shadow-color: rgba(15, 23, 42, 0.08);
+  --shadow-color: rgba(0, 230, 180, 0.08);
 
   --accent: #00e6b4;
 
-  --navbar-bg: rgba(255, 255, 255, 0.88);
+  --navbar-bg: rgba(255, 255, 255, 0.92);
 
   --transition-theme:
     background-color 0.35s ease,
@@ -1316,37 +1305,35 @@ select {
 }
 
 /* =========================================================
-   LIGHT MODE
+   LIGHT MODE (Updated)
 ========================================================= */
 
-[data-theme="light"] .nav-login-btn {
-  color: #1f2937;
-
-  border-color:
-    rgba(31, 41, 55, 0.18);
-
-  background:
-    rgba(255, 255, 255, 0.75);
+[data-theme="light"] .nav-login-btn,
+html[data-theme="light"] .nav-login-btn {
+  color: #0f172a;
+  border-color: rgba(0, 230, 180, 0.25);
+  background: rgba(255, 255, 255, 0.85);
 }
 
-[data-theme="light"] .nav-login-btn:hover {
+[data-theme="light"] .nav-login-btn:hover,
+html[data-theme="light"] .nav-login-btn:hover {
   color: #00b894;
-
-  border-color: #00b894;
-
-  background:
-    rgba(0, 184, 148, 0.06);
+  border-color: #00e6b4;
+  background: rgba(0, 230, 180, 0.08);
+  box-shadow: 0 4px 15px rgba(0, 230, 180, 0.15);
 }
 
-[data-theme="light"] .nav-signup-btn {
-  background: #00b894;
+[data-theme="light"] .nav-signup-btn,
+html[data-theme="light"] .nav-signup-btn {
+  background: linear-gradient(135deg, #00e6b4, #0d9488);
   color: #ffffff;
-  box-shadow: 0 6px 18px rgba(0, 184, 148, 0.22);
+  box-shadow: 0 6px 20px rgba(0, 230, 180, 0.28);
 }
 
-[data-theme="light"] .nav-signup-btn:hover {
-  background: #00a383;
-  box-shadow: 0 8px 24px rgba(0, 184, 148, 0.32);
+[data-theme="light"] .nav-signup-btn:hover,
+html[data-theme="light"] .nav-signup-btn:hover {
+  background: linear-gradient(135deg, #00d4a8, #0f766e);
+  box-shadow: 0 8px 26px rgba(0, 230, 180, 0.38);
 }
 
 /* =========================================================
@@ -1879,20 +1866,16 @@ select {
 }
 
 /* =========================================================
-   LIGHT MODE DROPDOWN
+   LIGHT MODE DROPDOWN (Updated)
 ========================================================= */
 
 html[data-theme="light"]
 .nav-profile-btn,
 body[data-theme="light"]
 .nav-profile-btn {
-  background:
-    rgba(15, 23, 42, 0.035);
-
-  border-color:
-    rgba(15, 23, 42, 0.10);
-
-  color: #1e293b;
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 230, 180, 0.18);
+  color: #0f172a;
 }
 
 html[data-theme="light"]
@@ -1904,29 +1887,23 @@ html[data-theme="light"]
 .nav-profile-btn.profile-active,
 body[data-theme="light"]
 .nav-profile-btn.profile-active {
-  background:
-    rgba(15, 23, 42, 0.06);
-
-  border-color:
-    rgba(0, 184, 148, 0.25);
-
-  box-shadow:
-    0 8px 25px rgba(15, 23, 42, 0.10);
+  background: #ffffff;
+  border-color: rgba(0, 230, 180, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 230, 180, 0.15);
 }
 
 html[data-theme="light"]
 .nav-user-name,
 body[data-theme="light"]
 .nav-user-name {
-  color: #1e293b;
+  color: #0f172a;
 }
 
 html[data-theme="light"]
 .nav-profile-btn > i,
 body[data-theme="light"]
 .nav-profile-btn > i {
-  color:
-    rgba(15, 23, 42, 0.45);
+  color: rgba(15, 23, 42, 0.45);
 }
 
 /* =========================================================
@@ -1944,11 +1921,10 @@ body[data-theme="light"]
       rgba(248, 250, 252, 0.99)
     );
 
-  border-color:
-    rgba(15, 23, 42, 0.10);
+  border-color: rgba(0, 230, 180, 0.15);
 
   box-shadow:
-    0 25px 70px rgba(15, 23, 42, 0.14),
+    0 25px 70px rgba(0, 230, 180, 0.10),
     0 8px 25px rgba(15, 23, 42, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
@@ -1968,16 +1944,14 @@ html[data-theme="light"]
 .profile-user-details span,
 body[data-theme="light"]
 .profile-user-details span {
-  color:
-    rgba(51, 65, 85, 0.60);
+  color: rgba(51, 65, 85, 0.60);
 }
 
 html[data-theme="light"]
 .profile-divider,
 body[data-theme="light"]
 .profile-divider {
-  background:
-    rgba(15, 23, 42, 0.08);
+  background: rgba(0, 230, 180, 0.12);
 }
 
 /* =========================================================
@@ -1995,8 +1969,7 @@ html[data-theme="light"]
 .profile-menu-item:hover,
 body[data-theme="light"]
 .profile-menu-item:hover {
-  background:
-    rgba(15, 23, 42, 0.045);
+  background: rgba(0, 230, 180, 0.06);
 }
 
 html[data-theme="light"]
@@ -2010,8 +1983,7 @@ html[data-theme="light"]
 .profile-menu-item small,
 body[data-theme="light"]
 .profile-menu-item small {
-  color:
-    rgba(51, 65, 85, 0.55);
+  color: rgba(51, 65, 85, 0.55);
 }
 
 /* =========================================================
@@ -2022,8 +1994,7 @@ html[data-theme="light"]
 .profile-menu-item.profile-logout:hover,
 body[data-theme="light"]
 .profile-menu-item.profile-logout:hover {
-  background:
-    rgba(239, 68, 68, 0.055);
+  background: rgba(239, 68, 68, 0.055);
 }
 
 /* =========================================================
