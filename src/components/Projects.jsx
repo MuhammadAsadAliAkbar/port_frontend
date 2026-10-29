@@ -888,7 +888,7 @@ function Projects() {
           </div>
 
           <a
-            href="https://github.com/CryptonFuture"
+            href="https://github.com/MuhammadAsadAliAkbar/"
             target="_blank"
             rel="noopener noreferrer"
             className="github-btn"
